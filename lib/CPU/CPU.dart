@@ -9,7 +9,7 @@ class CPU {
      * In other words, each pixel is a boolean value, or a bit.
      * */
   final List<List<bool>> _display =
-      List.generate(32, (_) => List.filled(64, true));
+      List.generate(32, (_) => List.filled(64, false));
 
   // A program counter which points at the current instruction in memory
   int programCounter = 0;
@@ -66,6 +66,9 @@ class CPU {
   int X = 0;
   int Y = 0;
   int N = 0;
+
+  //Whether the painter needs to be redrawn
+  bool drawFlag = false;
 
   void initialize() {
     // Clear memory

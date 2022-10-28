@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'CPU/CPU.dart';
 
 void main() {
@@ -13,7 +12,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      showPerformanceOverlay: false,
+      title: 'PortaChip',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -26,13 +26,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -43,19 +43,29 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   late CPU cpu = CPU();
+  late AnimationController _controller;
 
   @override
   void initState() {
     cpu.initialize();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..repeat();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -67,40 +77,47 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-        appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Text(widget.title),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            cpu.invertDisplayState(20, 20);
+          },
         ),
         body: Padding(
           padding: const EdgeInsets.all(20),
-          child: CustomPaint(
-            painter: Display(cpu),
-            size: MediaQuery.of(context).size,
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (BuildContext context, Widget? child) {
+              return CustomPaint(
+                  willChange: true,
+                  painter: Display(cpu: cpu, listenable: _controller),
+                  size: MediaQuery.of(context).size);
+            },
           ),
         ));
   }
 }
 
 class Display extends CustomPainter {
+  final Animation listenable;
   CPU cpu;
-  final painter = Paint()
-    ..strokeWidth = 5
-    ..color = Colors.indigoAccent
-    ..style = PaintingStyle.stroke;
+  var painter = Paint()
+    ..strokeWidth = 0
+    ..color = Colors.black
+    ..style = PaintingStyle.fill;
 
-  Display(this.cpu);
+  Display({required this.cpu, required this.listenable})
+      : super(repaint: listenable);
 
   @override
   void paint(Canvas canvas, Size size) {
-    double recWidth = size.width / 63;
-    double recHeight = size.height / 31;
+    double recWidth = size.width / 64;
+    double recHeight = size.height / 32;
 
     for (int r = 0; r < 32; r++) {
       for (int c = 0; c < 64; c++) {
         if (cpu.getDisplayState(r, c) == false) {
           canvas.drawRect(
-              Rect.fromLTRB(c * recWidth, r * recHeight, recWidth, recHeight),
+              Rect.fromLTWH(c * recWidth, r * recHeight, recWidth, recHeight),
               painter);
         }
       }
@@ -108,5 +125,5 @@ class Display extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(CustomPainter oldDelegate) => this != oldDelegate;
 }
