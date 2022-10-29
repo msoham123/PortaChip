@@ -184,7 +184,11 @@ class CPU {
         _0x8XY6();
       } else if (N == 0x0007) {
         _0x8XY7();
+      } else {
+        _0x8XYE();
       }
+    } else if (F == 0x9000) {
+      _0x9XY0();
     } else {
       if (kDebugMode) {
         print("Error: Unknown Opcode $opcode");
@@ -352,6 +356,21 @@ class CPU {
       variableRegisters[F] = 0;
     }
     variableRegisters[X] = variableRegisters[Y] - variableRegisters[X];
+  }
+
+  // Handles setting Vx = Vx SHL 1
+  void _0x8XYE() {
+    // if the most-significant bit of Vx is 1, then VF is set to 1, else 0
+    variableRegisters[F] = (variableRegisters[X] & 0x80) >> 7;
+    // Vx is multiplied by 2
+    variableRegisters[X] <<= 1;
+  }
+
+  // Handles skipping next instruction if Vx != Vy.
+  void _0x9XY0() {
+    if (variableRegisters[X] != variableRegisters[Y]) {
+      programCounter += 2;
+    }
   }
 
   // Handles drawing to the display
