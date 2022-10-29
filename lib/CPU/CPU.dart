@@ -174,6 +174,8 @@ class CPU {
         _0x8XY1();
       } else if (N == 0x0002) {
         _0x8XY2();
+      } else if (N == 0x0003) {
+        _0x8XY3();
       }
     } else {
       if (kDebugMode) {
@@ -296,6 +298,11 @@ class CPU {
   // Handles setting V_x = V_x and V_y
   void _0x8XY2() {
     variableRegisters[X] &= variableRegisters[Y];
+  }
+
+  // Handles setting V_x = V_x xor V_y
+  void _0x8XY3() {
+    variableRegisters[X] ^= variableRegisters[Y];
   }
 
   // Handles drawing to the display
