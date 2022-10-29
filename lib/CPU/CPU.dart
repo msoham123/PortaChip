@@ -167,6 +167,10 @@ class CPU {
       _0x6XKK();
     } else if (F == 0x7000) {
       _0x7XKK();
+    } else if (F == 0x8000) {
+      if (N == 0x0000) {
+        _0x8XYO();
+      }
     } else {
       if (kDebugMode) {
         print("Error: Unknown Opcode $opcode");
@@ -273,6 +277,11 @@ class CPU {
   // Handles setting V_x to itself + kk
   void _0x7XKK() {
     variableRegisters[X] += KK;
+  }
+
+  // Handles setting V_x = V_y
+  void _0x8XYO() {
+    variableRegisters[X] = variableRegisters[Y];
   }
 
   // Handles drawing to the display
