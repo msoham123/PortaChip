@@ -63,11 +63,14 @@ class CPU {
     0xF0, 0x80, 0xF0, 0x80, 0x80 // F
   ];
 
-  //All four nibbles decoded from the opcode (let F be the first nibble)
+  // All four nibbles decoded from the opcode (let F be the first nibble)
   int F = 0;
   int X = 0;
   int Y = 0;
   int N = 0;
+
+  // Other needed bytes
+  int KK = 0;
 
   void initialize() {
     // Clear memory
@@ -111,6 +114,7 @@ class CPU {
     X = 0;
     Y = 0;
     N = 0;
+    KK = 0;
   }
 
   void emulateCycle() {
@@ -140,6 +144,9 @@ class CPU {
     Y = (opcode & 0x00F0) >> 4;
     // Extract nibble Z
     N = opcode & 0x000F;
+
+    // Extract KK
+    KK = opcode & 0x00FF;
   }
 
   void execute() {
@@ -158,6 +165,8 @@ class CPU {
       _0x5XY0();
     } else if (F == 0x6000) {
       _0x6XKK();
+    } else if (F == 0x7000) {
+      _0x7XKK();
     } else {
       if (kDebugMode) {
         print("Error: Unknown Opcode $opcode");
@@ -224,10 +233,8 @@ class CPU {
 
   // Handles skip next instruction if V_x = KK
   void _0x3XKK() {
-    // get kk
-    int kk = opcode & 0x00FF;
     // if v_x = KK, then skip next instruction
-    if (variableRegisters[X] == kk) {
+    if (variableRegisters[X] == KK) {
       programCounter += 2;
     }
   }
@@ -244,10 +251,8 @@ class CPU {
 
   // Handles skip next instruction if V_x != KK
   void _0x4XKK() {
-    // get kk
-    int kk = opcode & 0x00FF;
     // if v_x != KK, then skip next instruction
-    if (variableRegisters[X] != kk) {
+    if (variableRegisters[X] != KK) {
       programCounter += 2;
     }
   }
@@ -262,7 +267,12 @@ class CPU {
 
   // Handles setting V_x == kk
   void _0x6XKK() {
-    variableRegisters[X] = opcode & 0x00FF;
+    variableRegisters[X] = KK;
+  }
+
+  // Handles setting V_x to itself + kk
+  void _0x7XKK() {
+    variableRegisters[X] += KK;
   }
 
   // Handles drawing to the display
