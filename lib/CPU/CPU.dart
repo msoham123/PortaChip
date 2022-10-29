@@ -33,9 +33,9 @@ class CPU {
   int opcode = 0;
 
   /*
-     * The Chip-8 has 16 8-bit (one byte) general-purpose variable registers numbered
-     * 0 through F hexadecimal (0 through 15 in decimal) called V0 through VF
-     * */
+  * The Chip-8 has 16 8-bit (one byte) general-purpose variable registers numbered
+  * 0 through F hexadecimal (0 through 15 in decimal) called V0 through VF
+  * */
   List<int> variableRegisters = List.filled(16, 0);
 
   // The Chip-8 has a HEX based keypad (Ox0-0xF) in which we store the current state of the key
@@ -66,9 +66,6 @@ class CPU {
   int X = 0;
   int Y = 0;
   int N = 0;
-
-  //Whether the painter needs to be redrawn
-  bool drawFlag = false;
 
   void initialize() {
     // Clear memory
@@ -149,33 +146,7 @@ class CPU {
       // Graphics opcode
       case 0xD000:
         {
-          // Get the X and Y coordinates from VX and VY
-          int x = variableRegisters[X >> 8];
-          int y = variableRegisters[Y >> 4];
-
-          // Set VF to zero
-          variableRegisters[0xF] = 0;
-
-          //Initialize bit value
-          int bit;
-
-          // Loop through n number of rows
-          for (int n = 0; n < N; n++) {
-            // Get the Nth byte of sprite data, counting from the memory address in the index register
-            bit = memory[indexRegister + n];
-
-            // Loop through each of the 8 bits in this sprite row
-            for (int i = 0; i < 8; i++) {
-              /* If the current pixel is on and the pixel at coordinates X,Y
-                on the screen is also on turn off the pixel and set VF to 1 */
-              if ((bit & (0x80 >> i)) != 0) {
-                if (_display[x + i][y + n]) {
-                  variableRegisters[0xF] = 1;
-                }
-                _display[x + i][y + n] = !_display[x + i][y + n];
-              }
-            }
-          }
+          _0xD000(F);
           break;
         }
       default:
@@ -232,6 +203,36 @@ class CPU {
     for (int r = 0; r < 32; r++) {
       for (int c = 0; c < 64; c++) {
         _display[r][c] = false;
+      }
+    }
+  }
+
+  void _0xD000(F) {
+    // Get the X and Y coordinates from VX and VY
+    int x = variableRegisters[X >> 8];
+    int y = variableRegisters[Y >> 4];
+
+    // Set VF to zero
+    variableRegisters[0xF] = 0;
+
+    //Initialize bit value
+    int bit;
+
+    // Loop through n number of rows
+    for (int n = 0; n < N; n++) {
+      // Get the Nth byte of sprite data, counting from the memory address in the index register
+      bit = memory[indexRegister + n];
+
+      // Loop through each of the 8 bits in this sprite row
+      for (int i = 0; i < 8; i++) {
+        /* If the current pixel is on and the pixel at coordinates X,Y
+                on the screen is also on turn off the pixel and set VF to 1 */
+        if ((bit & (0x80 >> i)) != 0) {
+          if (_display[x + i][y + n]) {
+            variableRegisters[0xF] = 1;
+          }
+          _display[x + i][y + n] = !_display[x + i][y + n];
+        }
       }
     }
   }
