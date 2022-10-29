@@ -154,6 +154,8 @@ class CPU {
       _0x3XKK();
     } else if (F == 0x4000) {
       _0x4XKK();
+    } else if (F == 0x5000) {
+      _0x5XY0();
     } else {
       if (kDebugMode) {
         print("Error: Unknown Opcode $opcode");
@@ -244,6 +246,14 @@ class CPU {
     int kk = opcode & 0x00FF;
     // if v_x = KK, then skip next instruction
     if (variableRegisters[X] != kk) {
+      programCounter += 2;
+    }
+  }
+
+  // Handles skip next instruction if V_x = V_y
+  void _0x5XY0() {
+    // if v_x = KK, then skip next instruction
+    if (variableRegisters[X] == variableRegisters[Y]) {
       programCounter += 2;
     }
   }
