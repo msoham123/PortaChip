@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/foundation.dart';
 
 class CPU {
@@ -150,6 +152,8 @@ class CPU {
       _0x1NNN();
     } else if (F == 0x3000) {
       _0x3XKK();
+    } else if (F == 0x4000) {
+      _0x4XKK();
     } else {
       if (kDebugMode) {
         print("Error: Unknown Opcode $opcode");
@@ -232,6 +236,16 @@ class CPU {
     stackPointer++;
     // jump
     _0x1NNN();
+  }
+
+  // Handles skip next instruction if V_x != KK
+  void _0x4XKK() {
+    // get kk
+    int kk = opcode & 0x00FF;
+    // if v_x = KK, then skip next instruction
+    if (variableRegisters[X] != kk) {
+      programCounter += 2;
+    }
   }
 
   // Handles drawing to the display
