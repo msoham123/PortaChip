@@ -176,6 +176,8 @@ class CPU {
         _0x8XY2();
       } else if (N == 0x0003) {
         _0x8XY3();
+      } else if (N == 0x0004) {
+        _0x8XY4();
       }
     } else {
       if (kDebugMode) {
@@ -303,6 +305,17 @@ class CPU {
   // Handles setting V_x = V_x xor V_y
   void _0x8XY3() {
     variableRegisters[X] ^= variableRegisters[Y];
+  }
+
+  // Set Vx = Vx + Vy, set VF = carry.
+  void _0x8XY4() {
+    // if sum is greater than what can fit into a byte, overflow flag is set
+    if (variableRegisters[X] + variableRegisters[Y] > 255) {
+      variableRegisters[0x1] = 1;
+    } else {
+      variableRegisters[0x1] = 0;
+    }
+    variableRegisters[X] = (variableRegisters[X] + variableRegisters[Y]) & 0xFF;
   }
 
   // Handles drawing to the display
