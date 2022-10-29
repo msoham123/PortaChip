@@ -146,9 +146,10 @@ class CPU {
       // Graphics opcode
       case 0xD000:
         {
-          _0xD000(F);
+          _0xDXYN(F);
           break;
         }
+      case
       default:
         if (kDebugMode) {
           print("Error: Unknown Opcode $opcode");
@@ -207,7 +208,9 @@ class CPU {
     }
   }
 
-  void _0xD000(F) {
+
+  // Handles drawing to the display
+  void _0xDXYN(F) {
     // Get the X and Y coordinates from VX and VY
     int x = variableRegisters[X >> 8];
     int y = variableRegisters[Y >> 4];
