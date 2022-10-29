@@ -143,13 +143,18 @@ class CPU {
   void execute() {
     // Get first nibble by masking opcode using AND bitwise operation
     switch (F) {
-      // Graphics opcode
+      // Graphics
       case 0xD000:
         {
-          _0xDXYN(F);
+          _0xDXYN();
           break;
         }
-      case
+      // Call subroutine
+      case 0x2000:
+        {
+          _0x2NNN();
+          break;
+        }
       default:
         if (kDebugMode) {
           print("Error: Unknown Opcode $opcode");
@@ -208,9 +213,18 @@ class CPU {
     }
   }
 
+  // Handles returning of subroutines
+  void _0x2NNN() {
+    // set the current position of the stack to program counter
+    stack[stackPointer] = programCounter;
+    // increment stack pointer
+    stackPointer++;
+    // set program counter
+    programCounter = opcode & 0x0FFF;
+  }
 
   // Handles drawing to the display
-  void _0xDXYN(F) {
+  void _0xDXYN() {
     // Get the X and Y coordinates from VX and VY
     int x = variableRegisters[X >> 8];
     int y = variableRegisters[Y >> 4];
