@@ -182,6 +182,8 @@ class CPU {
         _0x8XY5();
       } else if (N == 0x0006) {
         _0x8XY6();
+      } else if (N == 0x0007) {
+        _0x8XY7();
       }
     } else {
       if (kDebugMode) {
@@ -265,48 +267,48 @@ class CPU {
     _0x1NNN();
   }
 
-  // Handles skip next instruction if V_x != KK
+  // Handles skip next instruction if Vx != KK
   void _0x4XKK() {
-    // if v_x != KK, then skip next instruction
+    // if Vx != KK, then skip next instruction
     if (variableRegisters[X] != KK) {
       programCounter += 2;
     }
   }
 
-  // Handles skip next instruction if V_x = V_y
+  // Handles skip next instruction if Vx = Vy
   void _0x5XY0() {
-    // if v_x = v_y, then skip next instruction
+    // if Vx = Vy, then skip next instruction
     if (variableRegisters[X] == variableRegisters[Y]) {
       programCounter += 2;
     }
   }
 
-  // Handles setting V_x == kk
+  // Handles setting Vx == kk
   void _0x6XKK() {
     variableRegisters[X] = KK;
   }
 
-  // Handles setting V_x to itself + kk
+  // Handles setting Vx to itself + kk
   void _0x7XKK() {
     variableRegisters[X] += KK;
   }
 
-  // Handles setting V_x = V_y
+  // Handles setting Vx = Vy
   void _0x8XYO() {
     variableRegisters[X] = variableRegisters[Y];
   }
 
-  // Handles setting V_x = V_x or V_y
+  // Handles setting Vx = Vx or Vy
   void _0x8XY1() {
     variableRegisters[X] |= variableRegisters[Y];
   }
 
-  // Handles setting V_x = V_x and V_y
+  // Handles setting Vx = Vx and Vy
   void _0x8XY2() {
     variableRegisters[X] &= variableRegisters[Y];
   }
 
-  // Handles setting V_x = V_x xor V_y
+  // Handles setting Vx = Vx xor Vy
   void _0x8XY3() {
     variableRegisters[X] ^= variableRegisters[Y];
   }
@@ -324,7 +326,7 @@ class CPU {
 
   // Handles setting Vx = Vx - Vy, setting VF = not borrow.
   void _0x8XY5() {
-    // if V_x > V_y set V_f to 1 else 0
+    // if Vx > Vy set Vf to 1 else 0
     if (variableRegisters[X] > variableRegisters[Y]) {
       variableRegisters[F] = 1;
     } else {
@@ -335,10 +337,21 @@ class CPU {
 
   // Handles setting Vx = Vx SHR 1
   void _0x8XY6() {
-    // if the least-significant bit of V_x is 1, then V_f is set to 1, else 0.
+    // if the least-significant bit of Vx is 1, then VF is set to 1, else 0.
     variableRegisters[F] = variableRegisters[X] & 0x1;
-    // V_x is divided by 2
+    // Vx is divided by 2
     variableRegisters[X] >>= 1;
+  }
+
+  // Handles setting Vx = Vy - Vx, setting VF = not borrow
+  void _0x8XY7() {
+    // if Vy > Vx set VF to 1 else 0
+    if (variableRegisters[Y] > variableRegisters[X]) {
+      variableRegisters[F] = 1;
+    } else {
+      variableRegisters[F] = 0;
+    }
+    variableRegisters[X] = variableRegisters[Y] - variableRegisters[X];
   }
 
   // Handles drawing to the display
