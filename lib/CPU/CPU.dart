@@ -71,6 +71,7 @@ class CPU {
 
   // Other needed bytes
   int KK = 0;
+  int NNN = 0;
 
   void initialize() {
     // Clear memory
@@ -147,6 +148,9 @@ class CPU {
 
     // Extract KK
     KK = opcode & 0x00FF;
+
+    // Extract NNN
+    NNN = opcode & 0x0FFF;
   }
 
   void execute() {
@@ -189,6 +193,8 @@ class CPU {
       }
     } else if (F == 0x9000) {
       _0x9XY0();
+    } else if (F == 0xA000) {
+      _0xANNN();
     } else {
       if (kDebugMode) {
         print("Error: Unknown Opcode $opcode");
@@ -250,7 +256,7 @@ class CPU {
   // Handles jump to location NNN
   void _0x1NNN() {
     // computer location NNN and set program counter
-    programCounter = opcode & 0x0FFF;
+    programCounter = NNN;
   }
 
   // Handles skip next instruction if V_x = KK
@@ -371,6 +377,11 @@ class CPU {
     if (variableRegisters[X] != variableRegisters[Y]) {
       programCounter += 2;
     }
+  }
+
+  // Handles setting index = NNN
+  void _0xANNN() {
+    indexRegister = NNN;
   }
 
   // Handles drawing to the display
