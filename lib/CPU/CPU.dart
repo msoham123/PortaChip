@@ -180,6 +180,8 @@ class CPU {
         _0x8XY4();
       } else if (N == 0x0005) {
         _0x8XY5();
+      } else if (N == 0x0006) {
+        _0x8XY6();
       }
     } else {
       if (kDebugMode) {
@@ -329,6 +331,14 @@ class CPU {
       variableRegisters[F] = 0;
     }
     variableRegisters[X] -= variableRegisters[Y];
+  }
+
+  // Handles setting Vx = Vx SHR 1
+  void _0x8XY6() {
+    // if the least-significant bit of V_x is 1, then V_f is set to 1, else 0.
+    variableRegisters[F] = variableRegisters[X] & 0x1;
+    // V_x is divided by 2
+    variableRegisters[X] >>= 1;
   }
 
   // Handles drawing to the display
