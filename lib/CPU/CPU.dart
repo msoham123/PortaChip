@@ -155,6 +155,11 @@ class CPU {
           _0x2NNN();
           break;
         }
+      case 0x1000:
+        {
+          _0x1NNN();
+          break;
+        }
       default:
         if (kDebugMode) {
           print("Error: Unknown Opcode $opcode");
@@ -213,14 +218,20 @@ class CPU {
     }
   }
 
+  // Handles jump to location NNN
+  void _0x1NNN() {
+    // computer location NNN and set program counter
+    programCounter = opcode & 0x0FFF;
+  }
+
   // Handles returning of subroutines
   void _0x2NNN() {
     // set the current position of the stack to program counter
     stack[stackPointer] = programCounter;
     // increment stack pointer
     stackPointer++;
-    // set program counter
-    programCounter = opcode & 0x0FFF;
+    // jump
+    _0x1NNN();
   }
 
   // Handles drawing to the display
