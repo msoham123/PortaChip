@@ -142,28 +142,18 @@ class CPU {
 
   void execute() {
     // Get first nibble by masking opcode using AND bitwise operation
-    switch (F) {
-      // Graphics
-      case 0xD000:
-        {
-          _0xDXYN();
-          break;
-        }
-      // Call subroutine
-      case 0x2000:
-        {
-          _0x2NNN();
-          break;
-        }
-      case 0x1000:
-        {
-          _0x1NNN();
-          break;
-        }
-      default:
-        if (kDebugMode) {
-          print("Error: Unknown Opcode $opcode");
-        }
+    if (F == 0xD000) {
+      _0xDXYN();
+    } else if (F == 0x2000) {
+      _0x2NNN();
+    } else if (F == 0x1000) {
+      _0x1NNN();
+    } else if (F == 0x3000) {
+      _0x3XKK();
+    } else {
+      if (kDebugMode) {
+        print("Error: Unknown Opcode $opcode");
+      }
     }
   }
 
@@ -222,6 +212,16 @@ class CPU {
   void _0x1NNN() {
     // computer location NNN and set program counter
     programCounter = opcode & 0x0FFF;
+  }
+
+  // Handles skip next instruction if V_x = KK
+  void _0x3XKK() {
+    // get kk
+    int kk = opcode & 0x00FF;
+    // if v_x = KK, then skip next instruction
+    if (variableRegisters[X] == kk) {
+      programCounter += 2;
+    }
   }
 
   // Handles returning of subroutines
