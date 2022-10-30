@@ -129,8 +129,6 @@ class CPU {
     KK = 0;
 
     loadRom();
-
-    _display[20][20] = true;
   }
 
   Future<void> loadRom() async {
@@ -457,7 +455,7 @@ class CPU {
     int y = variableRegisters[Y >> 4];
 
     // Set VF to zero
-    variableRegisters[0xF] = 0;
+    variableRegisters[F] = 0;
 
     //Initialize bit value
     int bit;
