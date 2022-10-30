@@ -5,7 +5,8 @@ import 'package:device_info_plus/device_info_plus.dart';
 class StateNotifier extends ChangeNotifier {
   // Class for updating app state
   bool isDarkMode = false;
-  late var deviceInfo;
+  late String devicePlatform;
+  late String deviceHardware;
 
   void updateTheme(bool isDarkMode) {
     this.isDarkMode = isDarkMode;
@@ -15,18 +16,31 @@ class StateNotifier extends ChangeNotifier {
   Future<void> loadAppInfo() async {
     DeviceInfoPlugin info = DeviceInfoPlugin();
     if (Platform.isAndroid) {
-      deviceInfo = await deviceInfo as AndroidDeviceInfo;
+      AndroidDeviceInfo deviceInfo = await info.deviceInfo as AndroidDeviceInfo;
+      devicePlatform = deviceInfo.model;
+      deviceHardware = deviceInfo.hardware;
     } else if (Platform.isIOS) {
-      deviceInfo = await deviceInfo.iosInfo as IosDeviceInfo;
+      IosDeviceInfo deviceInfo = await info.deviceInfo as IosDeviceInfo;
+      devicePlatform = deviceInfo.name ?? "Device Platform";
+      deviceHardware = deviceInfo.model ?? "Device Hardware";
     } else if (Platform.isMacOS) {
-      deviceInfo = await deviceInfo.macOsInfo as MacOsDeviceInfo;
+      MacOsDeviceInfo deviceInfo = await info.deviceInfo as MacOsDeviceInfo;
+      devicePlatform = deviceInfo.model;
+      deviceHardware =
+          "Mac OS (${deviceInfo.arch}) ${deviceInfo.activeCPUs} cores at ${deviceInfo.cpuFrequency}";
     } else if (Platform.isLinux) {
-      deviceInfo = await deviceInfo.linuxInfo as LinuxDeviceInfo;
+      LinuxDeviceInfo deviceInfo = await info.deviceInfo as LinuxDeviceInfo;
+      devicePlatform = deviceInfo.prettyName;
+      deviceHardware = deviceInfo.machineId ?? "Device Hardware";
     } else if (Platform.isWindows) {
-      deviceInfo = await deviceInfo.windowsInfo as WindowsDeviceInfo;
+      WindowsDeviceInfo deviceInfo = await info.deviceInfo as WindowsDeviceInfo;
+      devicePlatform = deviceInfo.deviceId;
+      deviceHardware = "Windows ${deviceInfo.numberOfCores}";
     } else {
-      deviceInfo = await deviceInfo.webBrowserInfo as WebBrowserInfo;
+      WebBrowserInfo deviceInfo = await info.deviceInfo as WebBrowserInfo;
+      devicePlatform = deviceInfo.platform ?? "Device Platform";
+      deviceHardware =
+          "${deviceInfo.platform} ${deviceInfo.browserName.name} ${deviceInfo.deviceMemory}";
     }
-    info = info;
   }
 }
