@@ -202,7 +202,8 @@ class Display extends CustomPainter {
       for (int c = 0; c < 64; c++) {
         if (cpu.getDisplayState(r, c) == false) {
           canvas.drawRect(
-              Rect.fromLTWH(c * recWidth, r * recHeight, recWidth, recHeight),
+              Rect.fromLTWH(c * recWidth, r * recHeight, recWidth * 1.025,
+                  recHeight * 1.025),
               painter);
         }
       }
