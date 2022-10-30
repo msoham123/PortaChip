@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:portachip/Display/ProgramView.dart';
 import 'package:portachip/Services/StateNotifier.dart';
+import 'package:portachip/UI/SplashScreen.dart';
 import 'package:provider/provider.dart';
+import 'package:portachip/UI/AppTheme.dart';
 
 void main() {
   runApp(
@@ -17,12 +18,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        showPerformanceOverlay: false,
-        title: 'PortaChip',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const ProgramView());
+    return Consumer<StateNotifier>(
+      builder: (context, appState, child) {
+        return MaterialApp(
+          showPerformanceOverlay: false,
+          title: 'PortaChip',
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          debugShowCheckedModeBanner: false,
+          themeMode: appState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          home: const SplashView(),
+        );
+      },
+    );
   }
 }
