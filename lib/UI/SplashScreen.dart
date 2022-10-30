@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:portachip/Display/ProgramView.dart';
 import 'package:portachip/Services/StateNotifier.dart';
 import 'package:provider/provider.dart';
+import 'HomePage.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -33,7 +33,7 @@ class SplashViewState extends State<SplashView> {
             Navigator.pushAndRemoveUntil(
                 context,
                 PageTransition(
-                    type: PageTransitionType.fade, child: const ProgramView()),
+                    type: PageTransitionType.fade, child: const HomePage()),
                 (Route<dynamic> route) => false);
           });
         }

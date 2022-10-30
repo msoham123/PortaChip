@@ -7,7 +7,9 @@ import '../CPU/CPU.dart';
 import 'Display.dart';
 
 class ProgramView extends StatefulWidget {
-  const ProgramView({super.key});
+  final CPU cpu;
+
+  const ProgramView({super.key, required this.cpu});
 
   @override
   State<ProgramView> createState() => _ProgramViewState();
@@ -15,15 +17,13 @@ class ProgramView extends StatefulWidget {
 
 class _ProgramViewState extends State<ProgramView>
     with SingleTickerProviderStateMixin {
-  late CPU cpu = CPU();
+  late CPU cpu;
   late AnimationController _controller;
   bool _showDebugInfo = false;
-  bool _romLoaded = false;
 
   @override
   void initState() {
-    cpu.initialize();
-    chooseRom();
+    cpu = widget.cpu;
     _controller = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
@@ -33,26 +33,9 @@ class _ProgramViewState extends State<ProgramView>
 
   @override
   void dispose() {
+    _controller.stop();
     _controller.dispose();
     super.dispose();
-  }
-
-  Future<void> chooseRom() async {
-    const XTypeGroup typeGroup =
-        XTypeGroup(label: "images", extensions: ["ch8"]);
-    XFile? file = await openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
-    if (file != null) {
-      // get size of file
-      int size = await file.length();
-      // read contents of file as bytes
-      Uint8List buffer = await file.readAsBytes();
-      cpu.loadRom(file, size, buffer);
-      setState(() {
-        _romLoaded = true;
-      });
-    } else {
-      chooseRom();
-    }
   }
 
   @override
@@ -97,43 +80,37 @@ class _ProgramViewState extends State<ProgramView>
                   child: AnimatedBuilder(
                     animation: _controller,
                     builder: (BuildContext context, Widget? child) {
-                      if (!_showDebugInfo && _romLoaded) {
-                        cpu.emulateCycle();
-                        return CustomPaint(
-                            willChange: true,
-                            painter: Display(cpu: cpu, listenable: _controller),
-                            size: MediaQuery.of(context).size);
-                      } else if (_romLoaded) {
-                        cpu.emulateCycle();
-                        return SizedBox(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                Text("PC: ${cpu.programCounter}"),
-                                Text("index: ${cpu.indexRegister}"),
-                                Text("SP: ${cpu.stackPointer}"),
-                                Text("DT: ${cpu.delayTimer}"),
-                                Text("ST: ${cpu.soundTimer}"),
-                                Text("op: ${cpu.opcode}"),
-                                Text("F: ${cpu.F}"),
-                                Text("X: ${cpu.X}"),
-                                Text("Y: ${cpu.Y}"),
-                                Text("N: ${cpu.N}"),
-                                Text("NN: ${cpu.NN}"),
-                                Text("NNN: ${cpu.NNN}"),
-                                Text(
-                                    "Memory (loc, val): ${cpu.getMemoryDebugMap().toString().replaceAll(",", "   |   ")}"),
-                              ],
-                            ),
-                          ),
-                        );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
+                      cpu.emulateCycle();
+                      return CustomPaint(
+                        willChange: true,
+                        painter: Display(cpu: cpu, listenable: _controller),
+                        size: MediaQuery.of(context).size,
+                      );
+                      // cpu.emulateCycle();
+                      // return SizedBox(
+                      //   height: MediaQuery.of(context).size.height,
+                      //   width: MediaQuery.of(context).size.width,
+                      //   child: SingleChildScrollView(
+                      //     child: Column(
+                      //       children: [
+                      //         Text("PC: ${cpu.programCounter}"),
+                      //         Text("index: ${cpu.indexRegister}"),
+                      //         Text("SP: ${cpu.stackPointer}"),
+                      //         Text("DT: ${cpu.delayTimer}"),
+                      //         Text("ST: ${cpu.soundTimer}"),
+                      //         Text("op: ${cpu.opcode}"),
+                      //         Text("F: ${cpu.F}"),
+                      //         Text("X: ${cpu.X}"),
+                      //         Text("Y: ${cpu.Y}"),
+                      //         Text("N: ${cpu.N}"),
+                      //         Text("NN: ${cpu.NN}"),
+                      //         Text("NNN: ${cpu.NNN}"),
+                      //         Text(
+                      //             "Memory (loc, val): ${cpu.getMemoryDebugMap().toString().replaceAll(",", "   |   ")}"),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // );
                     },
                   ),
                 ),

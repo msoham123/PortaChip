@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:portachip/Services/StateNotifier.dart';
+import 'package:provider/provider.dart';
 
 class Footer extends StatefulWidget {
   const Footer({super.key});
@@ -29,7 +31,7 @@ class _FooterState extends State<Footer> {
         child: Row(
           children: [
             Text(
-              "Device Info",
+              Provider.of<StateNotifier>(context, listen: false).deviceData,
               style: Theme.of(context).textTheme.headlineSmall,
             )
           ],
