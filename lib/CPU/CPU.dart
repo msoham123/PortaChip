@@ -5,6 +5,9 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 
 class CPU {
+  static const int screenWidth = 64;
+  static const int screenHeight = 32;
+
   // The Chip-8 has 4 kilobytes of memory
   List<int> memory = List.filled(4096, 0);
 
@@ -13,7 +16,7 @@ class CPU {
      * In other words, each pixel is a boolean value, or a bit.
      * */
   final List<List<bool>> _display =
-      List.generate(32, (_) => List.filled(64, false));
+      List.generate(screenHeight, (_) => List.filled(screenWidth, false));
 
   // A program counter which points at the current instruction in memory
   int programCounter = 0;
@@ -387,8 +390,8 @@ class CPU {
   }
 
   void clearDisplay() {
-    for (int r = 0; r < 32; r++) {
-      for (int c = 0; c < 64; c++) {
+    for (int r = 0; r < screenHeight; r++) {
+      for (int c = 0; c < screenWidth; c++) {
         _display[r][c] = false;
       }
     }
@@ -549,8 +552,8 @@ class CPU {
   // Handles drawing to the display
   void _0xDXYN() {
     // Get the X and Y coordinates from VX and VY
-    int x = variableRegisters[(opcode & 0x0F00) >> 8] % 64;
-    int y = variableRegisters[(opcode & 0x00F0) >> 4] % 32;
+    int x = variableRegisters[(opcode & 0x0F00) >> 8] % screenWidth;
+    int y = variableRegisters[(opcode & 0x00F0) >> 4] % screenHeight;
     int length = opcode & 0xF;
 
     // Set VF to zero
@@ -569,12 +572,12 @@ class CPU {
         /* If the current pixel is on and the pixel at coordinates X,Y
                 on the screen is also on turn off the pixel and set VF to 1 */
         if ((bit & (0x80 >> col)) != 0) {
-          int element = x + col + ((y + row) * 64);
-          if (_display[element ~/ 64][element % 64]) {
+          int element = x + col + ((y + row) * screenWidth);
+          if (_display[element ~/ screenWidth][element % screenWidth]) {
             variableRegisters[0xF] = 1;
           }
-          _display[(element ~/ 64)][element % 64] =
-              _display[(element ~/ 64)][element % 64] ^= true;
+          _display[(element ~/ screenWidth)][element % screenWidth] =
+              _display[(element ~/ screenWidth)][element % screenWidth] ^= true;
         }
         // if ((bit & (0x80 >> i)) != 0) {
         //   int element = x + i + ((y + n) * 64);

@@ -13,11 +13,11 @@ class Display extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    double recWidth = size.width / 64;
-    double recHeight = size.height / 32;
+    double recWidth = size.width / CPU.screenWidth;
+    double recHeight = size.height / CPU.screenHeight;
 
-    for (int r = 0; r < 32; r++) {
-      for (int c = 0; c < 64; c++) {
+    for (int r = 0; r < CPU.screenHeight; r++) {
+      for (int c = 0; c < CPU.screenWidth; c++) {
         if (cpu.getDisplayState(r, c) == false) {
           // * 1.025 is a workaround to get rid of black lines in the grid
           painter.color = Colors.black;
