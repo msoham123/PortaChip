@@ -160,7 +160,9 @@ class CPU {
     if (F == 0x0000) {
       if (N == 0x000E) {
         _0x00EE();
-      } else {}
+      } else {
+        _0x00E0();
+      }
     } else if (F == 0xD000) {
       _0xDXYN();
     } else if (F == 0x2000) {
@@ -265,6 +267,11 @@ class CPU {
 
   // Handles returning from a subroutine
   void _0x00EE() {
+    clearDisplay();
+  }
+
+  // Handles clearing the display
+  void _0x00E0() {
     stackPointer--;
     programCounter = stack[stackPointer];
   }
