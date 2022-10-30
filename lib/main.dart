@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage>
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(vertical: 20),
           child: Center(
             child: AspectRatio(
               aspectRatio: 2 / 1,
@@ -201,6 +201,7 @@ class Display extends CustomPainter {
     for (int r = 0; r < 32; r++) {
       for (int c = 0; c < 64; c++) {
         if (cpu.getDisplayState(r, c) == false) {
+          // * 1.025 is a workaround to get rid of black lines in the grid
           canvas.drawRect(
               Rect.fromLTWH(c * recWidth, r * recHeight, recWidth * 1.025,
                   recHeight * 1.025),
