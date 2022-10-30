@@ -51,30 +51,54 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TileButton(
-                onTap: () async {
-                  await chooseRom();
-                  if (_romLoaded) {
-                    Future.delayed(Duration.zero, () {
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: ProgramView(cpu: cpu)),
-                      );
-                    });
-                  }
-                },
-                text: "Load ROM",
-                icon: Icons.open_in_browser_rounded,
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: SingleChildScrollView(
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                color: Theme.of(context).colorScheme.primary,
+                height: MediaQuery.of(context).size.height,
+                child: const Center(
+                  child: Text(
+                    "PortaChip Emulator",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
-            ],
-          ),
-        ));
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.07),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TileButton(
+                    onTap: () async {
+                      await chooseRom();
+                      if (_romLoaded) {
+                        Future.delayed(Duration.zero, () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.fade,
+                                child: ProgramView(cpu: cpu)),
+                          );
+                        });
+                      }
+                    },
+                    text: "Load ROM",
+                    icon: Icons.open_in_browser_rounded,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

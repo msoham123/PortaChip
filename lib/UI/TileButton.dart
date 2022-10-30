@@ -13,8 +13,12 @@ class TileButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.1,
-        height: MediaQuery.of(context).size.width * 0.1,
+        width: MediaQuery.of(context).size.width > 800
+            ? MediaQuery.of(context).size.width * 0.1
+            : 80,
+        height: MediaQuery.of(context).size.width > 800
+            ? MediaQuery.of(context).size.width * 0.1
+            : 80,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(10),
