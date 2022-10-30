@@ -78,6 +78,9 @@ class CPU {
   // Loaded rom
   late XFile? file;
 
+  // Cycle count
+  int cycles = 0;
+
   void initialize() {
     // Clear memory
     for (int i = 0; i < 4096; i++) {
@@ -110,6 +113,9 @@ class CPU {
     // Reset opcode
     opcode = 0;
 
+    // Reset cycles
+    cycles = 0;
+
     // Load font set into memory starting at 0x50 to 0x09F
     for (int i = 0; i < 80; i++) {
       memory[0x50 + i] = fontSet[i];
@@ -123,6 +129,8 @@ class CPU {
     KK = 0;
 
     loadRom();
+
+    _display[20][20] = true;
   }
 
   Future<void> loadRom() async {
@@ -151,6 +159,7 @@ class CPU {
     execute();
     updateDelayTimer();
     updateSoundTimer();
+    cycles++;
   }
 
   void fetch() {
@@ -181,59 +190,59 @@ class CPU {
 
   void execute() {
     // Get first nibble by masking opcode using AND bitwise operation
-    if (F == 0x0000) {
-      if (N == 0x000E) {
+    if (F == 0x0) {
+      if (N == 0xE) {
         _0x00EE();
-      } else {
+      } else if (N == 0x0) {
         _0x00E0();
       }
-    } else if (F == 0xD000) {
+    } else if (F == 0xD) {
       _0xDXYN();
-    } else if (F == 0x2000) {
+    } else if (F == 0x2) {
       _0x2NNN();
-    } else if (F == 0x1000) {
+    } else if (F == 0x1) {
       _0x1NNN();
-    } else if (F == 0x3000) {
+    } else if (F == 0x3) {
       _0x3XKK();
-    } else if (F == 0x4000) {
+    } else if (F == 0x4) {
       _0x4XKK();
-    } else if (F == 0x5000) {
+    } else if (F == 0x5) {
       _0x5XY0();
-    } else if (F == 0x6000) {
+    } else if (F == 0x6) {
       _0x6XKK();
-    } else if (F == 0x7000) {
+    } else if (F == 0x7) {
       _0x7XKK();
-    } else if (F == 0x8000) {
+    } else if (F == 0x8) {
       if (N == 0x0000) {
         _0x8XYO();
-      } else if (N == 0x0001) {
+      } else if (N == 0x1) {
         _0x8XY1();
-      } else if (N == 0x0002) {
+      } else if (N == 0x2) {
         _0x8XY2();
-      } else if (N == 0x0003) {
+      } else if (N == 0x3) {
         _0x8XY3();
-      } else if (N == 0x0004) {
+      } else if (N == 0x4) {
         _0x8XY4();
-      } else if (N == 0x0005) {
+      } else if (N == 0x5) {
         _0x8XY5();
-      } else if (N == 0x0006) {
+      } else if (N == 0x6) {
         _0x8XY6();
-      } else if (N == 0x0007) {
+      } else if (N == 0x7) {
         _0x8XY7();
-      } else {
+      } else if (N == 0xE) {
         _0x8XYE();
       }
-    } else if (F == 0x9000) {
+    } else if (F == 0x9) {
       _0x9XY0();
-    } else if (F == 0xA000) {
+    } else if (F == 0xA) {
       _0xANNN();
-    } else if (F == 0xB000) {
+    } else if (F == 0xB) {
       _0xBNNN();
-    } else if (F == 0xC000) {
+    } else if (F == 0xC) {
       _0xCXKK();
     } else {
       if (kDebugMode) {
-        print("Error: Unknown Opcode $opcode");
+        print("Error: Unknown Opcode $opcode with F $F");
       }
     }
   }
