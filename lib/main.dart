@@ -132,42 +132,52 @@ class _MyHomePageState extends State<MyHomePage>
         ),
         body: Padding(
           padding: const EdgeInsets.all(20),
-          child: AnimatedBuilder(
-            animation: _controller,
-            builder: (BuildContext context, Widget? child) {
-              if (!_showDebugInfo && _romLoaded) {
-                cpu.emulateCycle();
-                return CustomPaint(
-                    willChange: true,
-                    painter: Display(cpu: cpu, listenable: _controller),
-                    size: MediaQuery.of(context).size);
-              } else {
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Text("PC: ${cpu.programCounter}"),
-                        Text("index: ${cpu.indexRegister}"),
-                        Text("SP: ${cpu.stackPointer}"),
-                        Text("DT: ${cpu.delayTimer}"),
-                        Text("ST: ${cpu.soundTimer}"),
-                        Text("op: ${cpu.opcode}"),
-                        Text("F: ${cpu.F}"),
-                        Text("X: ${cpu.X}"),
-                        Text("Y: ${cpu.Y}"),
-                        Text("N: ${cpu.N}"),
-                        Text("NN: ${cpu.NN}"),
-                        Text("NNN: ${cpu.NNN}"),
-                        Text(
-                            "Memory (loc, val): ${cpu.getMemoryDebugMap().toString().replaceAll(",", "   |   ")}"),
-                      ],
-                    ),
-                  ),
-                );
-              }
-            },
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: 2 / 1,
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (BuildContext context, Widget? child) {
+                  if (!_showDebugInfo && _romLoaded) {
+                    cpu.emulateCycle();
+                    return CustomPaint(
+                        willChange: true,
+                        painter: Display(cpu: cpu, listenable: _controller),
+                        size: MediaQuery.of(context).size);
+                  } else if (_romLoaded) {
+                    cpu.emulateCycle();
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Text("PC: ${cpu.programCounter}"),
+                            Text("index: ${cpu.indexRegister}"),
+                            Text("SP: ${cpu.stackPointer}"),
+                            Text("DT: ${cpu.delayTimer}"),
+                            Text("ST: ${cpu.soundTimer}"),
+                            Text("op: ${cpu.opcode}"),
+                            Text("F: ${cpu.F}"),
+                            Text("X: ${cpu.X}"),
+                            Text("Y: ${cpu.Y}"),
+                            Text("N: ${cpu.N}"),
+                            Text("NN: ${cpu.NN}"),
+                            Text("NNN: ${cpu.NNN}"),
+                            Text(
+                                "Memory (loc, val): ${cpu.getMemoryDebugMap().toString().replaceAll(",", "   |   ")}"),
+                          ],
+                        ),
+                      ),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
+            ),
           ),
         ));
   }
