@@ -157,7 +157,11 @@ class CPU {
 
   void execute() {
     // Get first nibble by masking opcode using AND bitwise operation
-    if (F == 0xD000) {
+    if (F == 0x0000) {
+      if (N == 0x000E) {
+        _0x00EE();
+      } else {}
+    } else if (F == 0xD000) {
       _0xDXYN();
     } else if (F == 0x2000) {
       _0x2NNN();
@@ -257,6 +261,12 @@ class CPU {
         _display[r][c] = false;
       }
     }
+  }
+
+  // Handles returning from a subroutine
+  void _0x00EE() {
+    stackPointer--;
+    programCounter = stack[stackPointer];
   }
 
   // Handles jump to location NNN
