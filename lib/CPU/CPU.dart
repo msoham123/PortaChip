@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:math';
-
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 
 class CPU {
@@ -40,7 +40,7 @@ class CPU {
   * The Chip-8 has 16 8-bit (one byte) general-purpose variable registers numbered
   * 0 through F hexadecimal (0 through 15 in decimal) called V0 through VF
   * */
-  List<int> variableRegisters = List.filled(16, 0);
+  List<int> variableRegisters = List.filled(16, 0x000);
 
   // The Chip-8 has a HEX based keypad (Ox0-0xF) in which we store the current state of the key
   List<int> key = List.filled(16, 0);
@@ -74,6 +74,9 @@ class CPU {
   // Other needed bytes
   int KK = 0;
   int NNN = 0;
+
+  // Loaded rom
+  late XFile? file;
 
   void initialize() {
     // Clear memory
@@ -109,7 +112,7 @@ class CPU {
 
     // Load font set into memory starting at 0x50 to 0x09F
     for (int i = 0; i < 80; i++) {
-      memory[i] = fontSet[i];
+      memory[0x50 + i] = fontSet[i];
     }
 
     // Reset nibbles
@@ -118,6 +121,27 @@ class CPU {
     Y = 0;
     N = 0;
     KK = 0;
+
+    loadRom();
+  }
+
+  Future<void> loadRom() async {
+    const XTypeGroup typeGroup =
+        XTypeGroup(label: "images", extensions: ["ch8"]);
+    file = await openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
+    if (file != null) {
+      // get size of file
+      int size = await file!.length();
+      // read contents of file as bytes
+      Uint8List buffer = await file!.readAsBytes();
+      for (int i = 0; i < size; i++) {
+        // load file contents starting at 0x200
+        memory[0x200 + i] = buffer[i];
+      }
+    } else {
+      if (kDebugMode) print("File not found");
+      await loadRom();
+    }
   }
 
   void emulateCycle() {
@@ -267,13 +291,13 @@ class CPU {
 
   // Handles returning from a subroutine
   void _0x00EE() {
-    clearDisplay();
+    stackPointer--;
+    programCounter = stack[stackPointer];
   }
 
   // Handles clearing the display
   void _0x00E0() {
-    stackPointer--;
-    programCounter = stack[stackPointer];
+    clearDisplay();
   }
 
   // Handles jump to location NNN
@@ -446,5 +470,15 @@ class CPU {
         }
       }
     }
+  }
+
+  Map<int, int> getMemoryDebugMap() {
+    Map<int, int> memMap = {};
+    for (int i = 0; i < memory.length; i++) {
+      if (memory[i] != 0) {
+        memMap[i] = memory[i];
+      }
+    }
+    return memMap;
   }
 }

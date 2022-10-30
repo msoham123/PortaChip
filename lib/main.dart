@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:statsfl/statsfl.dart';
 import 'CPU/CPU.dart';
@@ -55,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   late CPU cpu = CPU();
   late AnimationController _controller;
+  bool _showDebugInfo = true;
 
   @override
   void initState() {
@@ -81,21 +83,66 @@ class _MyHomePageState extends State<MyHomePage>
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            cpu.invertDisplayState(20, 20);
-          },
+        floatingActionButton: SizedBox(
+          width: 150,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FloatingActionButton(
+                child: const Icon(Icons.bug_report),
+                onPressed: () {
+                  setState(() {
+                    _showDebugInfo = !_showDebugInfo;
+                  });
+                },
+              ),
+              FloatingActionButton(
+                child: const Icon(Icons.forward),
+                onPressed: () {
+                  try {
+                    cpu.emulateCycle();
+                  } catch (e, s) {
+                    if (kDebugMode) print("$e ::: $s");
+                  }
+                },
+              ),
+            ],
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(20),
           child: AnimatedBuilder(
             animation: _controller,
             builder: (BuildContext context, Widget? child) {
-              // cpu.emulateCycle();
-              return CustomPaint(
-                  willChange: true,
-                  painter: Display(cpu: cpu, listenable: _controller),
-                  size: MediaQuery.of(context).size);
+              if (!_showDebugInfo) {
+                return CustomPaint(
+                    willChange: true,
+                    painter: Display(cpu: cpu, listenable: _controller),
+                    size: MediaQuery.of(context).size);
+              } else {
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Text("PC: ${cpu.programCounter}"),
+                        Text("index: ${cpu.indexRegister}"),
+                        Text("SP: ${cpu.stackPointer}"),
+                        Text("DT: ${cpu.delayTimer}"),
+                        Text("ST: ${cpu.soundTimer}"),
+                        Text("op: ${cpu.opcode}"),
+                        Text("F: ${cpu.F}"),
+                        Text("X: ${cpu.X}"),
+                        Text("Y: ${cpu.Y}"),
+                        Text("N: ${cpu.N}"),
+                        Text(
+                            "Memory (loc, val): ${cpu.getMemoryDebugMap().toString().replaceAll(",", "   |   ")}")
+                      ],
+                    ),
+                  ),
+                );
+              }
             },
           ),
         ));
