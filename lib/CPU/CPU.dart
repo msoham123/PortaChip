@@ -168,6 +168,124 @@ class CPU {
 
   void execute() {
     // Get first nibble by masking opcode using AND bitwise operation
+    switch (F) {
+      case 0x0:
+        {
+          switch (N) {
+            case 0xE:
+              {
+                _0x00EE();
+                break;
+              }
+            case 0x0:
+              {
+                _0x00E0();
+                break;
+              }
+          }
+          break;
+        }
+      case 0xD:
+        {
+          _0xDXYN();
+          break;
+        }
+      case 0x1:
+        {
+          _0x1NNN();
+          break;
+        }
+      case 0x2:
+        {
+          _0x2NNN();
+          break;
+        }
+      case 0x3:
+        {
+          _0x3XNN();
+          break;
+        }
+      case 0x4:
+        {
+          _0x4XNN();
+          break;
+        }
+      case 0x5:
+        {
+          _0x5XY0();
+          break;
+        }
+      case 0x6:
+        {
+          _0x6XNN();
+          break;
+        }
+      case 0x7:
+        {
+          _0x7XNN();
+          break;
+        }
+      case 0x8:
+        {
+          switch (N) {
+            case 0x0:
+              _0x8XYO();
+              break;
+            case 0x1:
+              _0x8XY1();
+              break;
+            case 0x2:
+              _0x8XY2();
+              break;
+            case 0x3:
+              _0x8XY3();
+              break;
+            case 0x4:
+              _0x8XY4();
+              break;
+            case 0x5:
+              _0x8XY5();
+              break;
+            case 0x6:
+              _0x8XY6();
+              break;
+            case 0x7:
+              _0x8XY7();
+              break;
+            case 0xE:
+              _0x8XYE();
+              break;
+          }
+          break;
+        }
+      case 0x9:
+        {
+          _0x9XY0();
+          break;
+        }
+      case 0xA:
+        {
+          _0xANNN();
+          break;
+        }
+      case 0xB:
+        {
+          _0xBNNN();
+          break;
+        }
+      case 0xC:
+        {
+          _0xCXNN();
+          break;
+        }
+      default:
+        if (kDebugMode) {
+          print("Error: Unknown Opcode $opcode");
+        }
+    }
+  }
+
+  void executeIf() {
     if (F == 0x0) {
       if (N == 0xE) {
         _0x00EE();
@@ -191,7 +309,7 @@ class CPU {
     } else if (F == 0x7) {
       _0x7XNN();
     } else if (F == 0x8) {
-      if (N == 0x0000) {
+      if (N == 0x0) {
         _0x8XYO();
       } else if (N == 0x1) {
         _0x8XY1();
