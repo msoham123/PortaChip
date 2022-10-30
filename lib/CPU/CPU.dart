@@ -78,9 +78,6 @@ class CPU {
   // Loaded rom
   late XFile file;
 
-  // Cycle count
-  int cycles = 0;
-
   void initialize() {
     // Clear memory
     for (int i = 0; i < 4096; i++) {
@@ -113,9 +110,6 @@ class CPU {
     // Reset opcode
     opcode = 0;
 
-    // Reset cycles
-    cycles = 0;
-
     // Load font set into memory starting at 0x50 to 0x09F
     for (int i = 0; i < 80; i++) {
       memory[0x50 + i] = fontSet[i];
@@ -144,7 +138,6 @@ class CPU {
     execute();
     updateDelayTimer();
     updateSoundTimer();
-    cycles++;
   }
 
   void fetch() {

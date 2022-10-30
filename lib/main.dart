@@ -162,7 +162,6 @@ class _MyHomePageState extends State<MyHomePage>
                         Text("NNN: ${cpu.NNN}"),
                         Text(
                             "Memory (loc, val): ${cpu.getMemoryDebugMap().toString().replaceAll(",", "   |   ")}"),
-                        Text("Cycles: ${cpu.cycles}"), //error on cycle 47
                       ],
                     ),
                   ),
