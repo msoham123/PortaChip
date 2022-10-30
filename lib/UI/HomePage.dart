@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:portachip/UI/TileButton.dart';
 import '../CPU/CPU.dart';
 import '../Display/ProgramView.dart';
 
@@ -41,7 +42,9 @@ class _HomePageState extends State<HomePage> {
         _romLoaded = true;
       });
     } else {
-      chooseRom();
+      setState(() {
+        _romLoaded = false;
+      });
     }
   }
 
@@ -53,24 +56,22 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton(
-                onPressed: () async {
+              TileButton(
+                onTap: () async {
                   await chooseRom();
                   if (_romLoaded) {
                     Future.delayed(Duration.zero, () {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.fade,
-                              child: ProgramView(cpu: cpu)),
-                          (Route<dynamic> route) => false);
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: ProgramView(cpu: cpu)),
+                      );
                     });
                   }
                 },
-                child: Text(
-                  "Load Rom",
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
+                text: "Load ROM",
+                icon: Icons.open_in_browser_rounded,
               ),
             ],
           ),
