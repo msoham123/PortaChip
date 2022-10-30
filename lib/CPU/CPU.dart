@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 
 class CPU {
@@ -195,6 +197,10 @@ class CPU {
       _0x9XY0();
     } else if (F == 0xA000) {
       _0xANNN();
+    } else if (F == 0xB000) {
+      _0xBNNN();
+    } else if (F == 0xC000) {
+      _0xCXKK();
     } else {
       if (kDebugMode) {
         print("Error: Unknown Opcode $opcode");
@@ -382,6 +388,16 @@ class CPU {
   // Handles setting index = NNN
   void _0xANNN() {
     indexRegister = NNN;
+  }
+
+  // Handles jump to location NNN + V0.
+  void _0xBNNN() {
+    programCounter = NNN + variableRegisters[0];
+  }
+
+  // Set Vx = random byte AND KK.
+  void _0xCXKK() {
+    variableRegisters[X] = -128 + Random().nextInt(256) + KK;
   }
 
   // Handles drawing to the display
