@@ -61,7 +61,7 @@ class _ProgramViewState extends State<ProgramView>
       isEnabled: true,
       align: Alignment.topLeft,
       child: Scaffold(
-          backgroundColor: Colors.black54,
+          backgroundColor: Theme.of(context).colorScheme.background,
           // floatingActionButton: SizedBox(
           //   width: 150,
           //   child: Row(

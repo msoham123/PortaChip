@@ -4,7 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 
 class StateNotifier extends ChangeNotifier {
   // Class for updating app state
-  bool isDarkMode = false;
+  bool isDarkMode = true;
   late String devicePlatform;
   late String deviceHardware;
 

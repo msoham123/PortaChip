@@ -23,14 +23,14 @@ class _FooterState extends State<Footer> {
     return Container(
       height: MediaQuery.of(context).size.height * 0.06,
       width: MediaQuery.of(context).size.width,
-      color: Colors.black54,
+      color: Theme.of(context).colorScheme.background,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Row(
-          children: const [
+          children: [
             Text(
               "Device Info",
-              style: TextStyle(color: Colors.white, fontSize: 13),
+              style: Theme.of(context).textTheme.headlineSmall,
             )
           ],
         ),
