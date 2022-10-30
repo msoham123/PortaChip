@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:portachip/Services/StateNotifier.dart';
 import 'package:portachip/UI/Footer.dart';
+import 'package:provider/provider.dart';
 import 'package:statsfl/statsfl.dart';
 import '../CPU/CPU.dart';
 import 'Display.dart';
@@ -83,7 +85,12 @@ class _ProgramViewState extends State<ProgramView>
                       cpu.emulateCycle();
                       return CustomPaint(
                         willChange: true,
-                        painter: Display(cpu: cpu, listenable: _controller),
+                        painter: Display(
+                            cpu: cpu,
+                            listenable: _controller,
+                            scale: Provider.of<StateNotifier>(context,
+                                    listen: false)
+                                .upscale),
                         size: MediaQuery.of(context).size,
                       );
                       // cpu.emulateCycle();

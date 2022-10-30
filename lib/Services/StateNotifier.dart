@@ -6,6 +6,7 @@ class StateNotifier extends ChangeNotifier {
   // Class for updating app state
   bool isDarkMode = false;
   String deviceData = "";
+  int upscale = 4;
 
   void updateTheme(bool isDarkMode) {
     this.isDarkMode = isDarkMode;
