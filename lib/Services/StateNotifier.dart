@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 class StateNotifier extends ChangeNotifier {
   // Class for updating app state
   bool isDarkMode = false;
-  late String deviceData;
+  String deviceData = "";
 
   void updateTheme(bool isDarkMode) {
     this.isDarkMode = isDarkMode;
@@ -32,10 +32,12 @@ class StateNotifier extends ChangeNotifier {
     } else if (Platform.isWindows) {
       WindowsDeviceInfo deviceInfo = await info.deviceInfo as WindowsDeviceInfo;
       deviceData = "${deviceInfo.deviceId} Windows ${deviceInfo.numberOfCores}";
-    } else {
+    } else if (kIsWeb) {
       WebBrowserInfo deviceInfo = await info.deviceInfo as WebBrowserInfo;
       deviceData =
           "${deviceInfo.platform ?? "Device Platform"}${deviceInfo.platform} ${deviceInfo.browserName.name} ${deviceInfo.deviceMemory}";
+    } else {
+      deviceData = "Platform not found";
     }
   }
 }

@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.07),
+                  horizontal: MediaQuery.of(context).size.width * 0.06),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -92,6 +92,14 @@ class _HomePageState extends State<HomePage> {
                     },
                     text: "Load ROM",
                     icon: Icons.open_in_browser_rounded,
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  TileButton(
+                    onTap: () async {},
+                    text: "Settings",
+                    icon: Icons.settings,
                   ),
                 ],
               ),
