@@ -1,11 +1,13 @@
 import 'dart:typed_data';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:portachip/Services/StateNotifier.dart';
 import 'package:portachip/UI/Footer.dart';
 import 'package:provider/provider.dart';
 import 'package:statsfl/statsfl.dart';
 import '../CPU/CPU.dart';
+import '../UI/HomePage.dart';
 import 'Display.dart';
 
 class ProgramView extends StatefulWidget {
@@ -82,7 +84,8 @@ class _ProgramViewState extends State<ProgramView>
                   child: AnimatedBuilder(
                     animation: _controller,
                     builder: (BuildContext context, Widget? child) {
-                      cpu.emulateCycle();
+                      if (!Provider.of<StateNotifier>(context, listen: false)
+                          .isPaused) cpu.emulateCycle();
                       return CustomPaint(
                         willChange: true,
                         painter: Display(
@@ -122,7 +125,31 @@ class _ProgramViewState extends State<ProgramView>
                   ),
                 ),
               ),
-              const Footer(),
+              Footer(
+                pause: () {
+                  setState(() {
+                    Provider.of<StateNotifier>(context, listen: false)
+                            .isPaused =
+                        !Provider.of<StateNotifier>(context, listen: false)
+                            .isPaused;
+                  });
+                },
+                stop: () {
+                  Provider.of<StateNotifier>(context, listen: false).isPaused =
+                      true;
+                  cpu.initialize();
+                  Future.delayed(Duration.zero, () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: const HomePage()),
+                        (Route<dynamic> route) => false);
+                    Provider.of<StateNotifier>(context, listen: false)
+                        .isPaused = false;
+                  });
+                },
+              ),
             ],
           )),
     );

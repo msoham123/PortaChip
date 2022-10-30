@@ -2,7 +2,9 @@ import 'dart:typed_data';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:portachip/Services/StateNotifier.dart';
 import 'package:portachip/UI/TileButton.dart';
+import 'package:provider/provider.dart';
 import '../CPU/CPU.dart';
 import '../Display/ProgramView.dart';
 

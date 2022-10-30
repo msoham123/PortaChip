@@ -2,23 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:portachip/Services/StateNotifier.dart';
 import 'package:provider/provider.dart';
 
-class Footer extends StatefulWidget {
-  const Footer({super.key});
-
-  @override
-  State<Footer> createState() => _FooterState();
-}
-
-class _FooterState extends State<Footer> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+class Footer extends StatelessWidget {
+  final VoidCallback stop, pause;
+  const Footer({super.key, required this.pause, required this.stop});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +19,28 @@ class _FooterState extends State<Footer> {
             Text(
               Provider.of<StateNotifier>(context, listen: false).deviceData,
               style: Theme.of(context).textTheme.headlineSmall,
-            )
+            ),
+            Text(" |", style: Theme.of(context).textTheme.headlineSmall),
+            TextButton(
+              onPressed: pause,
+              child: Text(
+                "${Provider.of<StateNotifier>(context, listen: false).isPaused ? "Resume" : "Pause"} Emulation",
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.merge(const TextStyle(color: Colors.blue)),
+              ),
+            ),
+            Text(" |", style: Theme.of(context).textTheme.headlineSmall),
+            TextButton(
+              onPressed: stop,
+              child: Text(
+                "Stop Emulation",
+                style: Theme.of(context).textTheme.headlineSmall?.merge(
+                      const TextStyle(color: Colors.blue),
+                    ),
+              ),
+            ),
           ],
         ),
       ),
