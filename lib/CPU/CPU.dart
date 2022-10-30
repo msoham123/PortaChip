@@ -72,11 +72,11 @@ class CPU {
   int N = 0;
 
   // Other needed bytes
-  int KK = 0;
+  int NN = 0;
   int NNN = 0;
 
   // Loaded rom
-  late XFile? file;
+  late XFile file;
 
   // Cycle count
   int cycles = 0;
@@ -126,27 +126,14 @@ class CPU {
     X = 0;
     Y = 0;
     N = 0;
-    KK = 0;
-
-    loadRom();
+    NN = 0;
   }
 
-  Future<void> loadRom() async {
-    const XTypeGroup typeGroup =
-        XTypeGroup(label: "images", extensions: ["ch8"]);
-    file = await openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
-    if (file != null) {
-      // get size of file
-      int size = await file!.length();
-      // read contents of file as bytes
-      Uint8List buffer = await file!.readAsBytes();
-      for (int i = 0; i < size; i++) {
-        // load file contents starting at 0x200
-        memory[0x200 + i] = buffer[i];
-      }
-    } else {
-      if (kDebugMode) print("File not found");
-      await loadRom();
+  Future<void> loadRom(XFile file, int size, Uint8List buffer) async {
+    this.file = file;
+    for (int i = 0; i < size; i++) {
+      // load file contents starting at 0x200
+      memory[0x200 + i] = buffer[i];
     }
   }
 
@@ -179,8 +166,8 @@ class CPU {
     // Extract nibble Z
     N = opcode & 0x000F;
 
-    // Extract KK
-    KK = opcode & 0x00FF;
+    // Extract NN
+    NN = opcode & 0x00FF;
 
     // Extract NNN
     NNN = opcode & 0x0FFF;
@@ -201,15 +188,15 @@ class CPU {
     } else if (F == 0x1) {
       _0x1NNN();
     } else if (F == 0x3) {
-      _0x3XKK();
+      _0x3XNN();
     } else if (F == 0x4) {
-      _0x4XKK();
+      _0x4XNN();
     } else if (F == 0x5) {
       _0x5XY0();
     } else if (F == 0x6) {
-      _0x6XKK();
+      _0x6XNN();
     } else if (F == 0x7) {
-      _0x7XKK();
+      _0x7XNN();
     } else if (F == 0x8) {
       if (N == 0x0000) {
         _0x8XYO();
@@ -237,7 +224,7 @@ class CPU {
     } else if (F == 0xB) {
       _0xBNNN();
     } else if (F == 0xC) {
-      _0xCXKK();
+      _0xCXNN();
     } else {
       if (kDebugMode) {
         print("Error: Unknown Opcode $opcode with F $F");
@@ -313,10 +300,10 @@ class CPU {
     programCounter = NNN;
   }
 
-  // Handles skip next instruction if V_x = KK
-  void _0x3XKK() {
-    // if v_x = KK, then skip next instruction
-    if (variableRegisters[X] == KK) {
+  // Handles skip next instruction if V_x = NN
+  void _0x3XNN() {
+    // if v_x = NN, then skip next instruction
+    if (variableRegisters[X] == NN) {
       programCounter += 2;
     }
   }
@@ -331,10 +318,10 @@ class CPU {
     _0x1NNN();
   }
 
-  // Handles skip next instruction if Vx != KK
-  void _0x4XKK() {
-    // if Vx != KK, then skip next instruction
-    if (variableRegisters[X] != KK) {
+  // Handles skip next instruction if Vx != NN
+  void _0x4XNN() {
+    // if Vx != NN, then skip next instruction
+    if (variableRegisters[X] != NN) {
       programCounter += 2;
     }
   }
@@ -347,14 +334,14 @@ class CPU {
     }
   }
 
-  // Handles setting Vx == kk
-  void _0x6XKK() {
-    variableRegisters[X] = KK;
+  // Handles setting Vx == NN
+  void _0x6XNN() {
+    variableRegisters[X] = NN;
   }
 
-  // Handles setting Vx to itself + kk
-  void _0x7XKK() {
-    variableRegisters[X] += KK;
+  // Handles setting Vx to itself + NN
+  void _0x7XNN() {
+    variableRegisters[X] += NN;
   }
 
   // Handles setting Vx = Vy
@@ -381,9 +368,9 @@ class CPU {
   void _0x8XY4() {
     // if sum is greater than what can fit into a byte, overflow flag is set
     if (variableRegisters[X] + variableRegisters[Y] > 255) {
-      variableRegisters[F] = 1;
+      variableRegisters[0xF] = 1;
     } else {
-      variableRegisters[F] = 0;
+      variableRegisters[0xF] = 0;
     }
     variableRegisters[X] = (variableRegisters[X] + variableRegisters[Y]) & 0xFF;
   }
@@ -392,9 +379,9 @@ class CPU {
   void _0x8XY5() {
     // if Vx > Vy set Vf to 1 else 0
     if (variableRegisters[X] > variableRegisters[Y]) {
-      variableRegisters[F] = 1;
+      variableRegisters[0xF] = 1;
     } else {
-      variableRegisters[F] = 0;
+      variableRegisters[0xF] = 0;
     }
     variableRegisters[X] -= variableRegisters[Y];
   }
@@ -402,7 +389,7 @@ class CPU {
   // Handles setting Vx = Vx SHR 1
   void _0x8XY6() {
     // if the least-significant bit of Vx is 1, then VF is set to 1, else 0.
-    variableRegisters[F] = variableRegisters[X] & 0x1;
+    variableRegisters[0xF] = variableRegisters[X] & 0x1;
     // Vx is divided by 2
     variableRegisters[X] >>= 1;
   }
@@ -411,9 +398,9 @@ class CPU {
   void _0x8XY7() {
     // if Vy > Vx set VF to 1 else 0
     if (variableRegisters[Y] > variableRegisters[X]) {
-      variableRegisters[F] = 1;
+      variableRegisters[0xF] = 1;
     } else {
-      variableRegisters[F] = 0;
+      variableRegisters[0xF] = 0;
     }
     variableRegisters[X] = variableRegisters[Y] - variableRegisters[X];
   }
@@ -421,7 +408,7 @@ class CPU {
   // Handles setting Vx = Vx SHL 1
   void _0x8XYE() {
     // if the most-significant bit of Vx is 1, then VF is set to 1, else 0
-    variableRegisters[F] = (variableRegisters[X] & 0x80) >> 7;
+    variableRegisters[0xF] = (variableRegisters[X] & 0x80) >> 7;
     // Vx is multiplied by 2
     variableRegisters[X] <<= 1;
   }
@@ -443,38 +430,48 @@ class CPU {
     programCounter = NNN + variableRegisters[0];
   }
 
-  // Set Vx = random byte AND KK.
-  void _0xCXKK() {
-    variableRegisters[X] = -128 + Random().nextInt(256) + KK;
+  // Set Vx = random byte AND NN.
+  void _0xCXNN() {
+    variableRegisters[X] = -128 + Random().nextInt(256) + NN;
   }
 
   // Handles drawing to the display
   void _0xDXYN() {
     // Get the X and Y coordinates from VX and VY
-    int x = variableRegisters[X >> 8];
-    int y = variableRegisters[Y >> 4];
+    int x = variableRegisters[(opcode & 0x0F00) >> 8] % 64;
+    int y = variableRegisters[(opcode & 0x00F0) >> 4] % 32;
+    int length = opcode & 0xF;
 
     // Set VF to zero
-    variableRegisters[F] = 0;
+    variableRegisters[0xF] = 0;
 
     //Initialize bit value
     int bit;
 
     // Loop through n number of rows
-    for (int n = 0; n < N; n++) {
+    for (int row = 0; row < length; row++) {
       // Get the Nth byte of sprite data, counting from the memory address in the index register
-      bit = memory[indexRegister + n];
+      bit = memory[indexRegister + row];
 
       // Loop through each of the 8 bits in this sprite row
-      for (int i = 0; i < 8; i++) {
+      for (int col = 0; col < 8; col++) {
         /* If the current pixel is on and the pixel at coordinates X,Y
                 on the screen is also on turn off the pixel and set VF to 1 */
-        if ((bit & (0x80 >> i)) != 0) {
-          if (_display[x + i][y + n]) {
+        if ((bit & (0x80 >> col)) != 0) {
+          int element = x + col + ((y + row) * 64);
+          if (_display[element ~/ 64][element % 64]) {
             variableRegisters[0xF] = 1;
           }
-          _display[x + i][y + n] = !_display[x + i][y + n];
+          _display[(element ~/ 64)][element % 64] =
+              _display[(element ~/ 64)][element % 64] ^= true;
         }
+        // if ((bit & (0x80 >> i)) != 0) {
+        //   int element = x + i + ((y + n) * 64);
+        //   if (_display[element][element]) {
+        //     variableRegisters[0xF] = 1;
+        //   }
+        //   _display[(element)][element] = _display[(element)][element] ^= true;
+        // }
       }
     }
   }

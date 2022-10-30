@@ -1,3 +1,4 @@
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:statsfl/statsfl.dart';
@@ -56,11 +57,13 @@ class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   late CPU cpu = CPU();
   late AnimationController _controller;
-  bool _showDebugInfo = true;
+  bool _showDebugInfo = false;
+  bool _romLoaded = false;
 
   @override
   void initState() {
     cpu.initialize();
+    chooseRom();
     _controller = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
@@ -72,6 +75,24 @@ class _MyHomePageState extends State<MyHomePage>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> chooseRom() async {
+    const XTypeGroup typeGroup =
+        XTypeGroup(label: "images", extensions: ["ch8"]);
+    XFile? file = await openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
+    if (file != null) {
+      // get size of file
+      int size = await file.length();
+      // read contents of file as bytes
+      Uint8List buffer = await file.readAsBytes();
+      cpu.loadRom(file, size, buffer);
+      setState(() {
+        _romLoaded = true;
+      });
+    } else {
+      chooseRom();
+    }
   }
 
   @override
@@ -114,7 +135,8 @@ class _MyHomePageState extends State<MyHomePage>
           child: AnimatedBuilder(
             animation: _controller,
             builder: (BuildContext context, Widget? child) {
-              if (!_showDebugInfo) {
+              if (!_showDebugInfo && _romLoaded) {
+                cpu.emulateCycle();
                 return CustomPaint(
                     willChange: true,
                     painter: Display(cpu: cpu, listenable: _controller),
@@ -136,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage>
                         Text("X: ${cpu.X}"),
                         Text("Y: ${cpu.Y}"),
                         Text("N: ${cpu.N}"),
-                        Text("KK: ${cpu.KK}"),
+                        Text("NN: ${cpu.NN}"),
                         Text("NNN: ${cpu.NNN}"),
                         Text(
                             "Memory (loc, val): ${cpu.getMemoryDebugMap().toString().replaceAll(",", "   |   ")}"),
