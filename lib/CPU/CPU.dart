@@ -309,6 +309,11 @@ class CPU {
               _0xFX0A();
               break;
             }
+          case 0x5:
+            {
+              _0xFX15();
+              break;
+            }
         }
         break;
       default:
@@ -555,6 +560,11 @@ class CPU {
     if (!hasKey) {
       programCounter -= 2;
     }
+  }
+
+  // Handles setting delay timer = Vx
+  void _0xFX15() {
+    delayTimer = variableRegisters[X];
   }
 
   // Handles drawing to the display
