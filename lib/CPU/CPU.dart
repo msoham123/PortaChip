@@ -319,6 +319,16 @@ class CPU {
               _0xFX18();
               break;
             }
+          case 0xE:
+            {
+              _0xFX1E();
+              break;
+            }
+          case 0x9:
+            {
+              _0xFX29();
+              break;
+            }
         }
         break;
       default:
@@ -575,6 +585,18 @@ class CPU {
   // Handles setting sound timer = Vx
   void _0xFX18() {
     soundTimer = variableRegisters[X];
+  }
+
+  // Set index = index + Vx
+  void _0xFX1E() {
+    index += variableRegisters[X];
+  }
+
+  // Handles setting index to location of Vx sprite
+  void _0xFX29() {
+    // font chars start at 0x50, and each one is 5 bytes, so use offset
+    // to get address of of the first byte of the character
+    index = 0x50 + (5 * variableRegisters[X]);
   }
 
   // Handles drawing to the display
