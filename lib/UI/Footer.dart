@@ -3,8 +3,9 @@ import 'package:portachip/Services/StateNotifier.dart';
 import 'package:provider/provider.dart';
 
 class Footer extends StatelessWidget {
-  final VoidCallback stop, pause;
-  const Footer({super.key, required this.pause, required this.stop});
+  final VoidCallback stop, pause, fps;
+  const Footer(
+      {super.key, required this.pause, required this.stop, required this.fps});
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +40,17 @@ class Footer extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineSmall?.merge(
                       const TextStyle(color: Colors.blue),
                     ),
+              ),
+            ),
+            Text(" |", style: Theme.of(context).textTheme.headlineSmall),
+            TextButton(
+              onPressed: fps,
+              child: Text(
+                "${Provider.of<StateNotifier>(context, listen: false).showFPS ? "Hide" : "Show"} FPS",
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.merge(const TextStyle(color: Colors.blue)),
               ),
             ),
           ],

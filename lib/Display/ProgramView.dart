@@ -45,7 +45,7 @@ class _ProgramViewState extends State<ProgramView>
   @override
   Widget build(BuildContext context) {
     return StatsFl(
-      isEnabled: true,
+      isEnabled: Provider.of<StateNotifier>(context, listen: false).showFPS,
       align: Alignment.topLeft,
       child: Scaffold(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -149,6 +149,13 @@ class _ProgramViewState extends State<ProgramView>
                         (Route<dynamic> route) => false);
                     Provider.of<StateNotifier>(context, listen: false)
                         .isPaused = false;
+                  });
+                },
+                fps: () {
+                  setState(() {
+                    Provider.of<StateNotifier>(context, listen: false).showFPS =
+                        !Provider.of<StateNotifier>(context, listen: false)
+                            .showFPS;
                   });
                 },
               ),

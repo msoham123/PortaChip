@@ -8,6 +8,7 @@ class StateNotifier extends ChangeNotifier {
   String deviceData = "";
   int upscale = 2;
   bool isPaused = false;
+  bool showFPS = false;
 
   void updateTheme(bool isDarkMode) {
     this.isDarkMode = isDarkMode;
