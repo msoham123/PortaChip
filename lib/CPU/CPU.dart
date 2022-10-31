@@ -329,6 +329,11 @@ class CPU {
               _0xFX29();
               break;
             }
+          case 0x3:
+            {
+              _0xFX33();
+              break;
+            }
         }
         break;
       default:
@@ -597,6 +602,22 @@ class CPU {
     // font chars start at 0x50, and each one is 5 bytes, so use offset
     // to get address of of the first byte of the character
     index = 0x50 + (5 * variableRegisters[X]);
+  }
+
+  // Store Vx BCD representation in mem location index, index + 1, index + 2
+  void _0xFX33() {
+    int Vx = variableRegisters[X];
+
+    // first digit (ones place)
+    memory[index + 2] = Vx % 10;
+    Vx /= 10;
+
+    // second digit (tens place)
+    memory[index + 1] = Vx % 10;
+    Vx /= 10;
+
+    // third digit (hundreds place)
+    memory[index] = Vx % 10;
   }
 
   // Handles drawing to the display
