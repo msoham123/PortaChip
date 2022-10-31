@@ -5,10 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:portachip/UI/AppTheme.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+  if (!kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
     await DesktopWindow.setWindowSize(Size(1355, 750));
     await DesktopWindow.setMinWindowSize(Size(750, 750));
     await DesktopWindow.setMaxWindowSize(Size.infinite);

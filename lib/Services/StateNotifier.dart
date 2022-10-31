@@ -17,9 +17,10 @@ class StateNotifier extends ChangeNotifier {
 
   Future<void> loadAppInfo() async {
     DeviceInfoPlugin info = DeviceInfoPlugin();
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo deviceInfo = await info.deviceInfo as AndroidDeviceInfo;
-      deviceData = deviceInfo.model + deviceInfo.hardware;
+    if (kIsWeb) {
+      WebBrowserInfo deviceInfo = await info.deviceInfo as WebBrowserInfo;
+      deviceData =
+          "${deviceInfo.platform ?? "Device Platform"}${deviceInfo.platform} ${deviceInfo.browserName.name} ${deviceInfo.deviceMemory}";
     } else if (Platform.isIOS) {
       IosDeviceInfo deviceInfo = await info.deviceInfo as IosDeviceInfo;
       deviceData = (deviceInfo.name ?? "Device Platform") +
@@ -35,10 +36,9 @@ class StateNotifier extends ChangeNotifier {
     } else if (Platform.isWindows) {
       WindowsDeviceInfo deviceInfo = await info.deviceInfo as WindowsDeviceInfo;
       deviceData = "${deviceInfo.deviceId} Windows ${deviceInfo.numberOfCores}";
-    } else if (kIsWeb) {
-      WebBrowserInfo deviceInfo = await info.deviceInfo as WebBrowserInfo;
-      deviceData =
-          "${deviceInfo.platform ?? "Device Platform"}${deviceInfo.platform} ${deviceInfo.browserName.name} ${deviceInfo.deviceMemory}";
+    } else if (Platform.isAndroid) {
+      AndroidDeviceInfo deviceInfo = await info.deviceInfo as AndroidDeviceInfo;
+      deviceData = deviceInfo.model + deviceInfo.hardware;
     } else {
       deviceData = "Platform not found";
     }
