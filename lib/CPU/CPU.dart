@@ -311,7 +311,18 @@ class CPU {
             }
           case 0x5:
             {
-              _0xFX15();
+              switch (Y) {
+                case 0x1:
+                  {
+                    _0xFX15();
+                    break;
+                  }
+                case 0x5:
+                  {
+                    _0xFX55();
+                    break;
+                  }
+              }
               break;
             }
           case 0x8:
@@ -604,7 +615,14 @@ class CPU {
     index = 0x50 + (5 * variableRegisters[X]);
   }
 
-  // Store Vx BCD representation in mem location index, index + 1, index + 2
+  // Handles storing V0 to Vx in memory starting at index
+  void _0xFX55() {
+    for (int i = 0; i < X; i++) {
+      memory[index + i] = variableRegisters[i];
+    }
+  }
+
+  // Handles storing Vx BCD representation in mem location index, index + 1, index + 2
   void _0xFX33() {
     int Vx = variableRegisters[X];
 
