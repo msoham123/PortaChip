@@ -3,8 +3,21 @@ import 'package:portachip/Services/StateNotifier.dart';
 import 'package:portachip/UI/SplashScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:portachip/UI/AppTheme.dart';
+import 'package:desktop_window/desktop_window.dart';
+import 'dart:io';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    await DesktopWindow.setWindowSize(Size(1355, 750));
+    await DesktopWindow.setMinWindowSize(Size(750, 750));
+    await DesktopWindow.setMaxWindowSize(Size.infinite);
+    // await DesktopWindow.resetMaxWindowSize();
+    // await DesktopWindow.toggleFullScreen();
+    // bool isFullScreen = await DesktopWindow.getFullScreen();
+    // await DesktopWindow.setFullScreen(true);
+    // await DesktopWindow.setFullScreen(false);
+  }
   runApp(
     ChangeNotifierProvider<StateNotifier>(
       create: (context) => StateNotifier(),

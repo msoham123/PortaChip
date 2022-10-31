@@ -77,51 +77,53 @@ class _ProgramViewState extends State<ProgramView>
           // ),
           body: Column(
             children: [
-              const Expanded(child: SizedBox()),
-              Center(
-                child: AspectRatio(
-                  aspectRatio: 2 / 1,
-                  child: AnimatedBuilder(
-                    animation: _controller,
-                    builder: (BuildContext context, Widget? child) {
-                      if (!Provider.of<StateNotifier>(context, listen: false)
-                          .isPaused) cpu.emulateCycle();
-                      return CustomPaint(
-                        willChange: true,
-                        painter: Display(
-                            cpu: cpu,
-                            listenable: _controller,
-                            scale: Provider.of<StateNotifier>(context,
-                                    listen: false)
-                                .upscale),
-                        size: MediaQuery.of(context).size,
-                      );
-                      // cpu.emulateCycle();
-                      // return SizedBox(
-                      //   height: MediaQuery.of(context).size.height,
-                      //   width: MediaQuery.of(context).size.width,
-                      //   child: SingleChildScrollView(
-                      //     child: Column(
-                      //       children: [
-                      //         Text("PC: ${cpu.programCounter}"),
-                      //         Text("index: ${cpu.indexRegister}"),
-                      //         Text("SP: ${cpu.stackPointer}"),
-                      //         Text("DT: ${cpu.delayTimer}"),
-                      //         Text("ST: ${cpu.soundTimer}"),
-                      //         Text("op: ${cpu.opcode}"),
-                      //         Text("F: ${cpu.F}"),
-                      //         Text("X: ${cpu.X}"),
-                      //         Text("Y: ${cpu.Y}"),
-                      //         Text("N: ${cpu.N}"),
-                      //         Text("NN: ${cpu.NN}"),
-                      //         Text("NNN: ${cpu.NNN}"),
-                      //         Text(
-                      //             "Memory (loc, val): ${cpu.getMemoryDebugMap().toString().replaceAll(",", "   |   ")}"),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // );
-                    },
+              // const Expanded(child: SizedBox()),
+              Expanded(
+                child: Center(
+                  child: AspectRatio(
+                    aspectRatio: 2 / 1,
+                    child: AnimatedBuilder(
+                      animation: _controller,
+                      builder: (BuildContext context, Widget? child) {
+                        if (!Provider.of<StateNotifier>(context, listen: false)
+                            .isPaused) cpu.emulateCycle();
+                        return CustomPaint(
+                          willChange: true,
+                          painter: Display(
+                              cpu: cpu,
+                              listenable: _controller,
+                              scale: Provider.of<StateNotifier>(context,
+                                      listen: false)
+                                  .upscale),
+                          size: MediaQuery.of(context).size,
+                        );
+                        // cpu.emulateCycle();
+                        // return SizedBox(
+                        //   height: MediaQuery.of(context).size.height,
+                        //   width: MediaQuery.of(context).size.width,
+                        //   child: SingleChildScrollView(
+                        //     child: Column(
+                        //       children: [
+                        //         Text("PC: ${cpu.programCounter}"),
+                        //         Text("index: ${cpu.indexRegister}"),
+                        //         Text("SP: ${cpu.stackPointer}"),
+                        //         Text("DT: ${cpu.delayTimer}"),
+                        //         Text("ST: ${cpu.soundTimer}"),
+                        //         Text("op: ${cpu.opcode}"),
+                        //         Text("F: ${cpu.F}"),
+                        //         Text("X: ${cpu.X}"),
+                        //         Text("Y: ${cpu.Y}"),
+                        //         Text("N: ${cpu.N}"),
+                        //         Text("NN: ${cpu.NN}"),
+                        //         Text("NNN: ${cpu.NNN}"),
+                        //         Text(
+                        //             "Memory (loc, val): ${cpu.getMemoryDebugMap().toString().replaceAll(",", "   |   ")}"),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // );
+                      },
+                    ),
                   ),
                 ),
               ),
