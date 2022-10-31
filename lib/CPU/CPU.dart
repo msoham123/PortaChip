@@ -281,6 +281,17 @@ class CPU {
           _0xCXNN();
           break;
         }
+      case 0xE:
+        {
+          switch (Y) {
+            case 0xA:
+              {
+                _0xEXA1();
+                break;
+              }
+          }
+          break;
+        }
       default:
         if (kDebugMode) {
           print("Error: Unknown Opcode $opcode");
@@ -544,9 +555,17 @@ class CPU {
     programCounter = NNN + variableRegisters[0];
   }
 
-  // Set Vx = random byte AND NN.
+  // Handles setting Vx = random byte AND NN.
   void _0xCXNN() {
     variableRegisters[X] = -128 + Random().nextInt(256) + NN;
+  }
+
+  // Handles skipping next instruction if key with the value of Vx is not pressed.
+  void _0xEXA1() {
+    // if key Vx is not pressed, skip next instruction
+    if (key[variableRegisters[X]] == 0) {
+      programCounter += 2;
+    }
   }
 
   // Handles drawing to the display
