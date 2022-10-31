@@ -6,7 +6,7 @@ class StateNotifier extends ChangeNotifier {
   // Class for updating app state
   bool isDarkMode = false;
   String deviceData = "";
-  int upscale = 2;
+  int upscale = 1;
   bool isPaused = false;
   bool showFPS = false;
 

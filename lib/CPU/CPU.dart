@@ -297,6 +297,15 @@ class CPU {
           }
           break;
         }
+      case 0xF:
+        switch (N) {
+          case 0x7:
+            {
+              _0xFX07();
+              break;
+            }
+        }
+        break;
       default:
         if (kDebugMode) {
           print("Error: Unknown Opcode $opcode");
@@ -523,6 +532,11 @@ class CPU {
     }
   }
 
+  // Handles setting Vx to delay timer value
+  int _0xFX07() {
+    variableRegisters[x] = delayTimer;
+  }
+
   // Handles drawing to the display
   void _0xDXYN() {
     // Get the X and Y coordinates from VX and VY
@@ -553,13 +567,6 @@ class CPU {
           _display[(element ~/ screenWidth)][element % screenWidth] =
               _display[(element ~/ screenWidth)][element % screenWidth] ^= true;
         }
-        // if ((bit & (0x80 >> i)) != 0) {
-        //   int element = x + i + ((y + n) * 64);
-        //   if (_display[element][element]) {
-        //     variableRegisters[0xF] = 1;
-        //   }
-        //   _display[(element)][element] = _display[(element)][element] ^= true;
-        // }
       }
     }
   }
