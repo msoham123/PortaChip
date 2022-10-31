@@ -533,7 +533,7 @@ class CPU {
   }
 
   // Handles setting Vx to delay timer value
-  int _0xFX07() {
+  void _0xFX07() {
     variableRegisters[x] = delayTimer;
   }
 
