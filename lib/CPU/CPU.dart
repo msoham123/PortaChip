@@ -304,6 +304,11 @@ class CPU {
               _0xFX07();
               break;
             }
+          case 0xA:
+            {
+              _0xFX0A();
+              break;
+            }
         }
         break;
       default:
@@ -535,6 +540,21 @@ class CPU {
   // Handles setting Vx to delay timer value
   void _0xFX07() {
     variableRegisters[x] = delayTimer;
+  }
+
+  // Handles waiting for a key press and storing value in Vx
+  void _0xFX0A() {
+    bool hasKey = false;
+    for (int i = 0; i < 16 && !hasKey; i++) {
+      if (keypad[i] == 1) {
+        registers[X] = keypad[i];
+        hasKey = true;
+      }
+    }
+    // if no key found go back to this instruction again and try again
+    if (!hasKey) {
+      programCounter -= 2;
+    }
   }
 
   // Handles drawing to the display
