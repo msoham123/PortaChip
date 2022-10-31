@@ -314,6 +314,11 @@ class CPU {
               _0xFX15();
               break;
             }
+          case 0x8:
+            {
+              _0xFX18();
+              break;
+            }
         }
         break;
       default:
@@ -567,9 +572,14 @@ class CPU {
     delayTimer = variableRegisters[X];
   }
 
+  // Handles setting sound timer = Vx
+  void _0xFX18() {
+    soundTimer = variableRegisters[X];
+  }
+
   // Handles drawing to the display
   void _0xDXYN() {
-    // Get the X and Y coordinates from VX and VY
+    // Get the X and Y coordinates from VX and VY (cannot use X and Y)
     int x = variableRegisters[(opcode & 0x0F00) >> 8] % screenWidth;
     int y = variableRegisters[(opcode & 0x00F0) >> 4] % screenHeight;
     int length = opcode & 0xF;
