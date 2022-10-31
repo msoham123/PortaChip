@@ -322,6 +322,11 @@ class CPU {
                     _0xFX55();
                     break;
                   }
+                case 0x6:
+                  {
+                    _0xFX65();
+                    break;
+                  }
               }
               break;
             }
@@ -636,6 +641,13 @@ class CPU {
 
     // third digit (hundreds place)
     memory[index] = Vx % 10;
+  }
+
+  // Handles reading V0 to Vx from memory locations starting at index
+  void _0xFX65() {
+    for (int i = 0; i < X; i++) {
+      variableRegisters[i] = memory[index + i];
+    }
   }
 
   // Handles drawing to the display
