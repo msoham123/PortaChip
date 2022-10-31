@@ -304,64 +304,6 @@ class CPU {
     }
   }
 
-  void executeIf() {
-    if (F == 0x0) {
-      if (N == 0xE) {
-        _0x00EE();
-      } else if (N == 0x0) {
-        _0x00E0();
-      }
-    } else if (F == 0xD) {
-      _0xDXYN();
-    } else if (F == 0x2) {
-      _0x2NNN();
-    } else if (F == 0x1) {
-      _0x1NNN();
-    } else if (F == 0x3) {
-      _0x3XNN();
-    } else if (F == 0x4) {
-      _0x4XNN();
-    } else if (F == 0x5) {
-      _0x5XY0();
-    } else if (F == 0x6) {
-      _0x6XNN();
-    } else if (F == 0x7) {
-      _0x7XNN();
-    } else if (F == 0x8) {
-      if (N == 0x0) {
-        _0x8XYO();
-      } else if (N == 0x1) {
-        _0x8XY1();
-      } else if (N == 0x2) {
-        _0x8XY2();
-      } else if (N == 0x3) {
-        _0x8XY3();
-      } else if (N == 0x4) {
-        _0x8XY4();
-      } else if (N == 0x5) {
-        _0x8XY5();
-      } else if (N == 0x6) {
-        _0x8XY6();
-      } else if (N == 0x7) {
-        _0x8XY7();
-      } else if (N == 0xE) {
-        _0x8XYE();
-      }
-    } else if (F == 0x9) {
-      _0x9XY0();
-    } else if (F == 0xA) {
-      _0xANNN();
-    } else if (F == 0xB) {
-      _0xBNNN();
-    } else if (F == 0xC) {
-      _0xCXNN();
-    } else {
-      if (kDebugMode) {
-        print("Error: Unknown Opcode $opcode with F $F");
-      }
-    }
-  }
-
   void updateDelayTimer() {
     // Remember that delay timer counts down until 0 at 60 Hz
     if (delayTimer > 0) {
