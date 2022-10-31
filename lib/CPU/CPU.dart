@@ -289,6 +289,11 @@ class CPU {
                 _0xEXA1();
                 break;
               }
+            case 0x9:
+              {
+                _0xEX9E();
+                break;
+              }
           }
           break;
         }
@@ -564,6 +569,14 @@ class CPU {
   void _0xEXA1() {
     // if key Vx is not pressed, skip next instruction
     if (key[variableRegisters[X]] == 0) {
+      programCounter += 2;
+    }
+  }
+
+  // Handles skipping next instruction if key with the value of Vx is pressed.
+  void _0xEX9E() {
+    // if key Vx is pressed, skip next instruction
+    if (key[variableRegisters[X]] == 1) {
       programCounter += 2;
     }
   }
