@@ -46,6 +46,16 @@ class CPU {
   List<int> variableRegisters = List.filled(16, 0x000);
 
   // The Chip-8 has a HEX based keypad (Ox0-0xF) in which we store the current state of the key
+  // Keypad       Keyboard
+  // +-+-+-+-+    +-+-+-+-+
+  // |1|2|3|C|    |1|2|3|4|
+  // +-+-+-+-+    +-+-+-+-+
+  // |4|5|6|D|    |Q|W|E|R|
+  // +-+-+-+-+ => +-+-+-+-+
+  // |7|8|9|E|    |A|S|D|F|
+  // +-+-+-+-+    +-+-+-+-+
+  // |A|0|B|F|    |Z|X|C|V|
+  // +-+-+-+-+    +-+-+-+-+
   List<int> key = List.filled(16, 0);
 
   // Of every value, we use the binary representation to draw using first four bits (nibble) a number or character.
@@ -80,6 +90,17 @@ class CPU {
 
   // Loaded rom
   late XFile file;
+
+  // Function Table
+  // Map<int, Function> functionTable = {
+  //   0x00E0: _0x00E0,
+  //   0x00EE: _0x00EE,
+  //   0x1NNN: _0x1NNN,
+  //   0x2NNN: _0x2NNN,
+  //   0x3XNN: _0x3XNN,
+  //   0x4XNN: _0x4XNN,
+  //   0x5XY0: _0x4XNN,
+  // };
 
   void initialize() {
     // Clear memory
@@ -362,6 +383,11 @@ class CPU {
   void updateDelayTimer() {
     // Remember that delay timer counts down until 0 at 60 Hz
     if (delayTimer > 0) {
+      if (delayTimer == 1) {
+        if (kDebugMode) {
+          print("Delay Timer Activated!");
+        }
+      }
       delayTimer--;
     }
   }
@@ -580,15 +606,15 @@ class CPU {
 
   // Handles setting Vx to delay timer value
   void _0xFX07() {
-    variableRegisters[x] = delayTimer;
+    variableRegisters[X] = delayTimer;
   }
 
   // Handles waiting for a key press and storing value in Vx
   void _0xFX0A() {
     bool hasKey = false;
     for (int i = 0; i < 16 && !hasKey; i++) {
-      if (keypad[i] == 1) {
-        registers[X] = keypad[i];
+      if (key[i] == 1) {
+        variableRegisters[X] = key[i];
         hasKey = true;
       }
     }
@@ -610,20 +636,20 @@ class CPU {
 
   // Set index = index + Vx
   void _0xFX1E() {
-    index += variableRegisters[X];
+    indexRegister += variableRegisters[X];
   }
 
   // Handles setting index to location of Vx sprite
   void _0xFX29() {
     // font chars start at 0x50, and each one is 5 bytes, so use offset
     // to get address of of the first byte of the character
-    index = 0x50 + (5 * variableRegisters[X]);
+    indexRegister = 0x50 + (5 * variableRegisters[X]);
   }
 
   // Handles storing V0 to Vx in memory starting at index
   void _0xFX55() {
     for (int i = 0; i < X; i++) {
-      memory[index + i] = variableRegisters[i];
+      memory[indexRegister + i] = variableRegisters[i];
     }
   }
 
@@ -632,21 +658,21 @@ class CPU {
     int Vx = variableRegisters[X];
 
     // first digit (ones place)
-    memory[index + 2] = Vx % 10;
-    Vx /= 10;
+    memory[indexRegister + 2] = Vx % 10;
+    Vx ~/= 10;
 
     // second digit (tens place)
-    memory[index + 1] = Vx % 10;
-    Vx /= 10;
+    memory[indexRegister + 1] = Vx % 10;
+    Vx ~/= 10;
 
     // third digit (hundreds place)
-    memory[index] = Vx % 10;
+    memory[indexRegister] = Vx % 10;
   }
 
   // Handles reading V0 to Vx from memory locations starting at index
   void _0xFX65() {
     for (int i = 0; i < X; i++) {
-      variableRegisters[i] = memory[index + i];
+      variableRegisters[i] = memory[indexRegister + i];
     }
   }
 
@@ -674,11 +700,15 @@ class CPU {
                 on the screen is also on turn off the pixel and set VF to 1 */
         if ((bit & (0x80 >> col)) != 0) {
           int element = x + col + ((y + row) * screenWidth);
-          if (_display[element ~/ screenWidth][element % screenWidth]) {
+
+          if (_display[(element ~/ screenWidth) % screenHeight]
+              [element % screenWidth]) {
             variableRegisters[0xF] = 1;
           }
-          _display[(element ~/ screenWidth)][element % screenWidth] =
-              _display[(element ~/ screenWidth)][element % screenWidth] ^= true;
+          _display[(element ~/ screenWidth) % screenHeight]
+                  [element % screenWidth] =
+              _display[(element ~/ screenWidth) % screenHeight]
+                  [element % screenWidth] ^= true;
         }
       }
     }
