@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> chooseRom() async {
     const XTypeGroup typeGroup =
-        XTypeGroup(label: "images", extensions: ["ch8"]);
+        XTypeGroup(label: "images", extensions: ["ch8", "rom", "txt"]);
     XFile? file = await openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
     if (file != null) {
       // get size of file
