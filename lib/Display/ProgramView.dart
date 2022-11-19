@@ -31,7 +31,9 @@ class _ProgramViewState extends State<ProgramView>
   void initState() {
     cpu = widget.cpu;
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 2),
+      duration: Duration(
+          microseconds:
+              Provider.of<StateNotifier>(context, listen: false).refreshDelay),
       vsync: this,
     )..repeat();
     super.initState();

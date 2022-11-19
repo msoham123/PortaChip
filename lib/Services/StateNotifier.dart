@@ -9,6 +9,7 @@ class StateNotifier extends ChangeNotifier {
   int upscale = 1;
   bool isPaused = false;
   bool showFPS = false;
+  int refreshDelay = 16667; //microseconds = 16.67 ms = 1/60 sec
 
   void updateTheme(bool isDarkMode) {
     this.isDarkMode = isDarkMode;
