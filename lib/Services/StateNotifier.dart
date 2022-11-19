@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
 
 class StateNotifier extends ChangeNotifier {
   // Class for updating app state
@@ -10,6 +12,7 @@ class StateNotifier extends ChangeNotifier {
   bool isPaused = false;
   bool showFPS = false;
   int refreshDelay = 16667; //microseconds = 16.67 ms = 1/60 sec
+  late File settingsFile;
 
   void updateTheme(bool isDarkMode) {
     this.isDarkMode = isDarkMode;
@@ -17,6 +20,23 @@ class StateNotifier extends ChangeNotifier {
   }
 
   Future<void> loadAppInfo() async {
+    if (!kIsWeb && Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      var directory = await getApplicationDocumentsDirectory();
+      String path = directory.path;
+      settingsFile = File("$path/settings.txt");
+      bool exists = await settingsFile.exists();
+      if (!exists) {
+        Map<String, dynamic> settingsMap = {
+          "darkMode": false,
+        };
+        await settingsFile.writeAsString(json.encode(settingsMap));
+      }
+      String contents = await settingsFile.readAsString();
+      debugPrint("Loaded settings file at $path/settings.txt\n$contents");
+      Map<String, dynamic> settings = json.decode(contents);
+      isDarkMode = settings["darkMode"] as bool;
+    }
+
     DeviceInfoPlugin info = DeviceInfoPlugin();
     if (kIsWeb) {
       WebBrowserInfo deviceInfo = await info.deviceInfo as WebBrowserInfo;
