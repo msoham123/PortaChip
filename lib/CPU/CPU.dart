@@ -92,15 +92,12 @@ class CPU {
   late XFile file;
 
   // Function Table
-  // Map<int, Function> functionTable = {
-  //   0x00E0: _0x00E0,
-  //   0x00EE: _0x00EE,
-  //   0x1NNN: _0x1NNN,
-  //   0x2NNN: _0x2NNN,
-  //   0x3XNN: _0x3XNN,
-  //   0x4XNN: _0x4XNN,
-  //   0x5XY0: _0x4XNN,
-  // };
+  late Map<int, Function> functionTable;
+  late Map<int, Function> functionTable8;
+  late Map<int, Function> functionTable0;
+  late Map<int, Function> functionTableE;
+  late Map<int, Function> functionTableF;
+  late Map<int, Function> functionTableF5;
 
   void initialize() {
     // Clear memory
@@ -145,6 +142,64 @@ class CPU {
     Y = 0;
     N = 0;
     NN = 0;
+
+    // assign function tables
+    functionTable = {
+      0x0: () => functionTable0[N]!.call(),
+      0x1: _0x1NNN,
+      0x2: _0x2NNN,
+      0x3: _0x3XNN,
+      0x4: _0x4XNN,
+      0x5: _0x5XY0,
+      0x6: _0x6XNN,
+      0x7: _0x7XNN,
+      0x8: () => functionTable8[N]!.call(),
+      0x9: _0x9XY0,
+      0xA: _0xANNN,
+      0xB: _0xBNNN,
+      0xC: _0xCXNN,
+      0xD: _0xDXYN,
+      0xE: () => functionTableE[Y]!.call(),
+      0xF: () => functionTableF[N]!.call(),
+    };
+
+    functionTable0 = {
+      0xE: _0x00EE,
+      0x0: _0x00E0,
+    };
+
+    functionTable8 = {
+      0x0: _0x8XYO,
+      0x1: _0x8XY1,
+      0x2: _0x8XY2,
+      0x3: _0x8XY3,
+      0x4: _0x8XY4,
+      0x5: _0x8XY5,
+      0x6: _0x8XY6,
+      0x7: _0x8XY7,
+      0xE: _0x8XYE,
+    };
+
+    functionTableE = {
+      0xA: _0xEXA1,
+      0x9: _0xEX9E,
+    };
+
+    functionTableF = {
+      0x7: _0xFX07,
+      0xA: _0xFX0A,
+      0x5: () => functionTableF5[Y]!.call(),
+      0x8: _0xFX18,
+      0xE: _0xFX1E,
+      0x9: _0xFX29,
+      0x3: _0xFX33,
+    };
+
+    functionTableF5 = {
+      0x1: _0xFX15,
+      0x5: _0xFX55,
+      0x6: _0xFX65,
+    };
   }
 
   Future<void> loadRom(XFile file, int size, Uint8List buffer) async {
@@ -159,7 +214,7 @@ class CPU {
     // CPU Cycle = Fetch-Decode-Execute and then update timers
     fetch();
     decode();
-    execute();
+    executeUsingTable();
     updateDelayTimer();
     updateSoundTimer();
   }
@@ -188,6 +243,16 @@ class CPU {
 
     // Extract NNN
     NNN = opcode & 0x0FFF;
+  }
+
+  void executeUsingTable() {
+    // Same as normal execute but uses faster table
+    try {
+      functionTable[F]!.call();
+    } catch (e) {
+      debugPrint("Fallback to switch execute: $e");
+      execute();
+    }
   }
 
   void execute() {
@@ -453,7 +518,7 @@ class CPU {
     programCounter = NNN;
   }
 
-  // Handles skip next instruction if V_x = NN
+  // Handles skip next instruction if Vopx = NN
   void _0x3XNN() {
     // if v_x = NN, then skip next instruction
     if (variableRegisters[X] == NN) {
