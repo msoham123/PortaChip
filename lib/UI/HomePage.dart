@@ -108,7 +108,13 @@ class _HomePageState extends State<HomePage> {
                         barrierDismissible: false,
                         context: context,
                         builder: (BuildContext context) {
-                          return SettingsDialog();
+                          return SettingsDialog(
+                            settingsOld: {
+                              ...Provider.of<StateNotifier>(context,
+                                      listen: false)
+                                  .settings
+                            },
+                          );
                         },
                       );
                       // Navigator.push(

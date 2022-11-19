@@ -3,6 +3,9 @@ import 'package:portachip/Services/StateNotifier.dart';
 import 'package:provider/provider.dart';
 
 class SettingsDialog extends StatelessWidget {
+  final Map<String, dynamic> settingsOld;
+  const SettingsDialog({super.key, required this.settingsOld});
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -41,9 +44,13 @@ class SettingsDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () async {
+            Provider.of<StateNotifier>(context, listen: false)
+                .updateTheme(settingsOld["darkMode"]);
+            Navigator.pop(context);
+          },
           child: Text(
-            "Close",
+            "Cancel",
             style: Theme.of(context)
                 .textTheme
                 .headlineSmall
