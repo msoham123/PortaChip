@@ -51,7 +51,16 @@ class SettingsDialog extends StatelessWidget {
           ),
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () async {
+            Future.delayed(Duration.zero, () async {
+              await Provider.of<StateNotifier>(context, listen: false)
+                  .updateSettings(
+                      "darkMode",
+                      Provider.of<StateNotifier>(context, listen: false)
+                          .isDarkMode);
+            });
+            Navigator.pop(context);
+          },
           child: Text(
             "Save",
             style: Theme.of(context)

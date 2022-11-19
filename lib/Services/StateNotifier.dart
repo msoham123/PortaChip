@@ -13,6 +13,7 @@ class StateNotifier extends ChangeNotifier {
   bool showFPS = false;
   int refreshDelay = 16667; //microseconds = 16.67 ms = 1/60 sec
   late File settingsFile;
+  late Map<String, dynamic> settings;
 
   void updateTheme(bool isDarkMode) {
     this.isDarkMode = isDarkMode;
@@ -33,7 +34,7 @@ class StateNotifier extends ChangeNotifier {
       }
       String contents = await settingsFile.readAsString();
       debugPrint("Loaded settings file at $path/settings.txt\n$contents");
-      Map<String, dynamic> settings = json.decode(contents);
+      settings = json.decode(contents);
       isDarkMode = settings["darkMode"] as bool;
     }
 
@@ -63,5 +64,10 @@ class StateNotifier extends ChangeNotifier {
     } else {
       deviceData = "Platform not found";
     }
+  }
+
+  Future<void> updateSettings(String key, var value) async {
+    settings[key] = value;
+    await settingsFile.writeAsString(json.encode(settings));
   }
 }
