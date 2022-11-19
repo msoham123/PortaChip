@@ -29,9 +29,9 @@ class AppTheme {
 
   static final ThemeData dark = ThemeData(
     colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: Colors.pink,
+        primarySwatch: Colors.blue,
         backgroundColor: Colors.black45,
-        accentColor: Colors.pinkAccent),
+        accentColor: Colors.blueAccent),
     textTheme: const TextTheme(
       headlineSmall: TextStyle(
         color: Colors.white,
