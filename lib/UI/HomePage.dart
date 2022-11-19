@@ -7,6 +7,7 @@ import 'package:portachip/UI/TileButton.dart';
 import 'package:provider/provider.dart';
 import '../CPU/CPU.dart';
 import '../Display/ProgramView.dart';
+import 'package:portachip/UI/SettingsDialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -59,6 +60,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Expanded(
               child: Container(
+                alignment: Alignment.center,
                 color: Theme.of(context).colorScheme.primary,
                 height: MediaQuery.of(context).size.height,
                 child: const Center(
@@ -99,7 +101,22 @@ class _HomePageState extends State<HomePage> {
                     height: 30,
                   ),
                   TileButton(
-                    onTap: () async {},
+                    onTap: () async {
+                      showDialog(
+                        barrierColor: Colors.transparent,
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return SettingsDialog();
+                        },
+                      );
+                      // Navigator.push(
+                      //   context,
+                      //   PageTransition(
+                      //       type: PageTransitionType.fade,
+                      //       child: SettingsDialog()),
+                      // );
+                    },
                     text: "Settings",
                     icon: Icons.settings,
                   ),
