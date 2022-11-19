@@ -88,6 +88,7 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                             context,
                             PageTransition(
+                                opaque: true,
                                 type: PageTransitionType.fade,
                                 child: ProgramView(cpu: cpu)),
                           );
