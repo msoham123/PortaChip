@@ -31,7 +31,7 @@ class _ProgramViewState extends State<ProgramView>
   void initState() {
     cpu = widget.cpu;
     _controller = AnimationController(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 2),
       vsync: this,
     )..repeat();
     super.initState();
@@ -51,7 +51,7 @@ class _ProgramViewState extends State<ProgramView>
     return RawKeyboardListener(
       focusNode: _keyNode,
       onKey: (RawKeyEvent event) {
-        KeyState.handleKeyInput(event, cpu);
+        // KeyState.handleKeyInput(event, cpu);
       },
       child: StatsFl(
         isEnabled: Provider.of<StateNotifier>(context, listen: false).showFPS,
