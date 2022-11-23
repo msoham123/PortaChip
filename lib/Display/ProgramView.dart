@@ -22,14 +22,12 @@ class ProgramView extends StatefulWidget {
 
 class _ProgramViewState extends State<ProgramView>
     with SingleTickerProviderStateMixin {
-  late CPU cpu;
   late AnimationController _controller;
   bool _showDebugInfo = false;
   FocusNode _keyNode = FocusNode();
 
   @override
   void initState() {
-    cpu = widget.cpu;
     _controller = AnimationController(
       duration: Duration(
           microseconds:
@@ -72,42 +70,17 @@ class _ProgramViewState extends State<ProgramView>
                         builder: (BuildContext context, Widget? child) {
                           if (!Provider.of<StateNotifier>(context,
                                   listen: false)
-                              .isPaused) cpu.emulateCycle();
+                              .isPaused) widget.cpu.emulateCycle();
                           return CustomPaint(
                             willChange: true,
                             painter: Display(
-                                cpu: cpu,
+                                cpu: widget.cpu,
                                 listenable: _controller,
                                 scale: Provider.of<StateNotifier>(context,
                                         listen: false)
                                     .upscale),
                             size: MediaQuery.of(context).size,
                           );
-                          // cpu.emulateCycle();
-                          // return SizedBox(
-                          //   height: MediaQuery.of(context).size.height,
-                          //   width: MediaQuery.of(context).size.width,
-                          //   child: SingleChildScrollView(
-                          //     child: Column(
-                          //       children: [
-                          //         Text("PC: ${cpu.programCounter}"),
-                          //         Text("index: ${cpu.indexRegister}"),
-                          //         Text("SP: ${cpu.stackPointer}"),
-                          //         Text("DT: ${cpu.delayTimer}"),
-                          //         Text("ST: ${cpu.soundTimer}"),
-                          //         Text("op: ${cpu.opcode}"),
-                          //         Text("F: ${cpu.F}"),
-                          //         Text("X: ${cpu.X}"),
-                          //         Text("Y: ${cpu.Y}"),
-                          //         Text("N: ${cpu.N}"),
-                          //         Text("NN: ${cpu.NN}"),
-                          //         Text("NNN: ${cpu.NNN}"),
-                          //         Text(
-                          //             "Memory (loc, val): ${cpu.getMemoryDebugMap().toString().replaceAll(",", "   |   ")}"),
-                          //       ],
-                          //     ),
-                          //   ),
-                          // );
                         },
                       ),
                     ),
@@ -125,7 +98,7 @@ class _ProgramViewState extends State<ProgramView>
                   stop: () {
                     Provider.of<StateNotifier>(context, listen: false)
                         .isPaused = true;
-                    cpu.initialize();
+                    widget.cpu.initialize();
                     Future.delayed(Duration.zero, () {
                       Navigator.pushAndRemoveUntil(
                           context,
