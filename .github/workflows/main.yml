@@ -17,6 +17,11 @@ jobs:
          architecture: arm64
      - run: flutter config --enable-macos-desktop
      - run: flutter build macos
+     - uses: actions/upload-artifact@v3
+       with:
+          name: mac-arm64
+          path: build/macos/Build/Products/Release/ # or path/to/artifact
+          retention-days: 14
  build_macos_x64:
    name: x64 MacOS Build
    runs-on: macos-latest
