@@ -6,8 +6,8 @@ on:
             - master
   
 jobs:
- build_macos_arm64:
-   name: Arm64 MacOS Build
+ build_macos_arm64_x64:
+   name: Universal Mac OS Build
    runs-on: macos-latest
    steps:
      - uses: actions/checkout@v3
@@ -16,23 +16,12 @@ jobs:
          channel: 'master'
          architecture: arm64
      - run: flutter config --enable-macos-desktop
-     - run: flutter build macos
+     - run: flutter build macos --release
      - uses: actions/upload-artifact@v3
        with:
           name: mac-arm64
           path: build/macos/Build/Products/Release/ # or path/to/artifact
           retention-days: 14
- build_macos_x64:
-   name: x64 MacOS Build
-   runs-on: macos-latest
-   steps:
-     - uses: actions/checkout@v3
-     - uses: subosito/flutter-action@v2
-       with:
-         channel: 'master'
-         architecture: x64
-     - run: flutter config --enable-macos-desktop
-     - run: flutter build macos
  build_linux_x64:
    name: x64 Linux Build
    runs-on: ubuntu-latest
@@ -45,7 +34,7 @@ jobs:
         sudo apt-get update -y
         sudo apt-get install -y ninja-build libgtk-3-dev
      - run: flutter config --enable-linux-desktop
-     - run: flutter build linux
+     - run: flutter build linux --release
  build_windows_x64:
    name: x64 Windows Build
    runs-on: windows-latest
@@ -55,5 +44,4 @@ jobs:
        with:
          channel: 'master'
      - run: flutter config --enable-windows-desktop
-     - run: flutter build windows
- 
+     - run: flutter build windows --release
