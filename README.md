@@ -5,6 +5,15 @@ An experimental cross-platform CHIP-8 interpreter built with Dart and Flutter.
 
 **NOTE: The project is still not complete. There are some render issues and input does not work quite yet.**
 
+
+
+<img src="./assets/images/grids.png" width="30%" alt=""/>
+<img src="./assets/images/aspectratio.png" width="30%" alt=""/>
+<img src="./assets/images/noi.png" width="30%" alt=""/>
+<img src="./assets/images/incorrectalign.png" width="30%" alt=""/>
+<img src="./assets/images/renderside.png" width="30%" alt=""/>
+<img src="./assets/images/memorydebug.png" width="30%" alt=""/>
+
 ## Introduction
 
 CHIP-8 is an interpreted programming language, developed by Joseph Weisbecker. It was initially used on the COSMAC VIP and Telmac 1800 8-bit microcomputers in the mid-1970s. CHIP-8 programs are run on a CHIP-8 virtual machine. It was made to allow video games to be more easily programmed for these computers
@@ -49,3 +58,6 @@ Packages used:
 - page_transition
 - desktop_window
 - path_provider
+
+## License
+PortaChip is licensed under GPL-3 [license](https://github.com/msoham123/PortaChip/blob/master/LICENSE) for more details
