@@ -3,22 +3,29 @@
 
 An experimental cross-platform CHIP-8 interpreter built with Dart and Flutter. 
 
+
+<p align="center">
+  <img src="./assets/images/workingibm.png" width="600px" height="400px" alt="">
+</p>
+
 **NOTE: The project is still not complete. There are some render issues and input does not work quite yet.**
-
-
-
-<img src="./assets/images/grids.png" width="30%" alt=""/>
-<img src="./assets/images/aspectratio.png" width="30%" alt=""/>
-<img src="./assets/images/noi.png" width="30%" alt=""/>
-<img src="./assets/images/incorrectalign.png" width="30%" alt=""/>
-<img src="./assets/images/renderside.png" width="30%" alt=""/>
-<img src="./assets/images/memorydebug.png" width="30%" alt=""/>
 
 ## Introduction
 
 CHIP-8 is an interpreted programming language, developed by Joseph Weisbecker. It was initially used on the COSMAC VIP and Telmac 1800 8-bit microcomputers in the mid-1970s. CHIP-8 programs are run on a CHIP-8 virtual machine. It was made to allow video games to be more easily programmed for these computers
 
 There are a number of classic video games ported to CHIP-8, such as Pong, Space Invaders, Tetris, and Pac-Man. There are also applications like a random maze generator and Conway's Game of Life.
+
+## Gallery
+
+<img src="./assets/images/memorydebug.png" width="300px" height="200px" alt=""></img>
+<img src="./assets/images/renderside.png" width="300px" height="200px" alt=""></img>
+<img src="./assets/images/incorrectalign.png" width="300px" height="200px" alt=""></img>
+<img src="./assets/images/noi.png" width="300px" height="200px" alt=""></img>
+<img src="./assets/images/grids.png" width="300px" height="200px" alt=""></img>
+<img src="./assets/images/aspectratio.png" width="300px" height="200px" alt=""></img>
+
+The gallery above highlights iteration on development for the project.
 
 ## Contribute
 
