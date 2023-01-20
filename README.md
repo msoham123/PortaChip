@@ -4,7 +4,8 @@
 An experimental cross-platform CHIP-8 interpreter built with Dart and Flutter. 
 
 <p align="center">
-  <img src="./assets/images/workingibm.png" width="600px" height="400px" alt="">
+  <img src="./assets/images/homescreen.png" width="350px" height="250px" alt=""></img>
+  <img src="./assets/images/workingibm.png" width="350px" height="250px" alt=""></img>
 </p>
 
 **NOTE: The project is still not complete. There are some render issues and input does not work quite yet.**
