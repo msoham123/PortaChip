@@ -3,7 +3,6 @@
 
 An experimental cross-platform CHIP-8 interpreter built with Dart and Flutter. 
 
-
 <p align="center">
   <img src="./assets/images/workingibm.png" width="600px" height="400px" alt="">
 </p>
@@ -18,12 +17,14 @@ There are a number of classic video games ported to CHIP-8, such as Pong, Space 
 
 ## Gallery
 
-<img src="./assets/images/memorydebug.png" width="300px" height="200px" alt=""></img>
-<img src="./assets/images/renderside.png" width="300px" height="200px" alt=""></img>
-<img src="./assets/images/incorrectalign.png" width="300px" height="200px" alt=""></img>
-<img src="./assets/images/noi.png" width="300px" height="200px" alt=""></img>
-<img src="./assets/images/grids.png" width="300px" height="200px" alt=""></img>
-<img src="./assets/images/aspectratio.png" width="300px" height="200px" alt=""></img>
+<p align="center">
+  <img src="./assets/images/memorydebug.png" width="300px" height="200px" alt=""></img>
+  <img src="./assets/images/renderside.png" width="300px" height="200px" alt=""></img>
+  <img src="./assets/images/incorrectalign.png" width="300px" height="200px" alt=""></img>
+  <img src="./assets/images/noi.png" width="300px" height="200px" alt=""></img>
+  <img src="./assets/images/grids.png" width="300px" height="200px" alt=""></img>
+  <img src="./assets/images/aspectratio.png" width="300px" height="200px" alt=""></img>
+</p>
 
 The gallery above highlights iteration on development for the project.
 
